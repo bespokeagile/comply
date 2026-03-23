@@ -1,0 +1,122 @@
+# Comply Product Model — BespokeTracker Codesign DSL
+# Dogfooding: modeling Comply using the platform's own tools
+# Created: 2026-03-13
+
+# ─── Epic: Core Scanner ───────────────────────────────────────────
+F-001 Compliance Scanner [level:epic design:required] — Core scanning engine that analyzes codebases against compliance frameworks
+  F-002 Codebase Scanner [level:feature design:required] — Scan repository files and build codebase model
+    F-003 File Discovery [level:story] — Find and filter files for analysis with configurable max-files limit
+    F-004 Structure Analysis [level:story] — Analyze file organization, imports, and architecture
+    F-005 Content Analysis [level:story] — Deep code content analysis with pattern matching
+    F-006 Semantic Analysis [level:story] — LLM-powered semantic understanding of code intent
+  F-007 Framework Evaluation [level:feature design:required] — Evaluate controls against collected evidence
+  F-008 Three-Layer Evidence [level:feature design:required] — Evidence collection across code, process, and traffic layers
+    F-009 Code Layer [level:story] — Static analysis evidence from source code
+    F-010 Process Layer [level:story] — Process maturity evidence from git history and CI
+    F-011 Traffic Layer [level:story] — Runtime governance evidence from audit logs
+  F-012 Multi-Framework Scan [level:feature] — Scan against multiple frameworks simultaneously
+  F-013 Incremental Scanning [level:feature] — Re-evaluate only changed controls based on git diff
+  F-014 Scan Model Cache [level:feature] — Cache codebase models for faster repeat scans
+
+# ─── Epic: Frameworks ─────────────────────────────────────────────
+F-020 Compliance Frameworks [level:epic design:required] — 10 frameworks with 117 controls
+  F-021 EU AI Act [level:feature] — Regulation 2024/1689, 8 controls
+  F-022 NIST AI RMF [level:feature] — NIST AI Risk Management Framework 1.0, 12 controls
+  F-023 ISO 42001 [level:feature] — ISO/IEC 42001:2023 AI Management System, 10 controls
+  F-024 SOC 2 AI [level:feature] — SOC 2 Trust Service Criteria for AI, 6 controls
+  F-025 OWASP LLM Top 10 [level:feature] — OWASP LLM Application Security, 34 controls
+  F-026 OWASP Agentic Top 10 [level:feature] — OWASP Agentic AI Security, 30 controls
+  F-027 Insurance Attestation [level:feature] — Insurance industry AI attestation, 5 controls
+  F-028 California AB 2013 [level:feature] — California transparency requirements, 3 controls
+  F-029 California SB 942 [level:feature] — California AI disclosure, 4 controls
+  F-030 Colorado SB 24-205 [level:feature] — Colorado high-risk AI requirements, 5 controls
+
+# ─── Epic: Remediation ────────────────────────────────────────────
+F-040 Remediation Engine [level:epic design:required] — Generate and prioritize fixes
+  F-041 Strategy Library [level:feature] — 22 remediation strategies mapped to evidence functions
+  F-042 Graph-Aware Ranking [level:feature] — Priority based on dependency graph and score delta
+  F-043 Remediation Roadmap [level:feature] — Ordered fix plan with effort levels and expected improvement
+  F-044 Code Generation [level:feature] — LLM-powered code fix suggestions
+  F-045 Correction Loop [level:feature] — Re-scan after remediation to validate improvements
+
+# ─── Epic: History & Analysis ─────────────────────────────────────
+F-050 History and Analysis [level:epic] — Track compliance progress over time
+  F-051 Scan History [level:feature design:required] — Persistent scan storage with SQLite
+  F-052 Scan Diff [level:feature] — Compare any two scans with per-control delta
+  F-053 Baselines [level:feature] — Set baselines for regression detection
+  F-054 Forecasting [level:feature] — Score trend projection with velocity and target date
+  F-055 Cross-Framework Overlap [level:feature] — Control equivalence mapping across frameworks
+  F-056 Jurisdiction Profiles [level:feature] — Auto-expand jurisdiction to relevant frameworks
+
+# ─── Epic: CI/CD Integration ──────────────────────────────────────
+F-060 CI/CD Integration [level:epic] — Pipeline integration for automated compliance
+  F-061 Gate Command [level:feature design:required] — Pass/fail with configurable score threshold and gap limits
+  F-062 GitHub Actions [level:feature] — Ready-made workflow YAML
+  F-063 GitLab CI [level:feature] — Pipeline template
+  F-064 Pre-commit Hook [level:feature] — Pre-commit integration for early checking
+
+# ─── Epic: AppSec Import/Export ───────────────────────────────────
+F-070 AppSec Pipeline [level:epic] — Security tool interoperability
+  F-071 SARIF Import [level:feature design:required] — Ingest SAST/DAST findings with CWE mapping
+  F-072 SBOM Import [level:feature] — CycloneDX and SPDX software bill of materials
+  F-073 JUnit Import [level:feature] — Test result ingestion from CI
+  F-074 CWE Mapping [level:feature design:required] — 69 CWEs mapped to compliance controls
+  F-075 JSON Export [level:feature] — Full report export
+  F-076 SARIF Export [level:feature] — SARIF v2.1.0 format
+  F-077 JUnit Export [level:feature] — JUnit XML format
+  F-078 Markdown Export [level:feature] — Readable markdown report
+  F-079 DOCX Export [level:feature] — Word document report
+  F-080 ZIP Audit Bundle [level:feature] — Complete audit package with all evidence
+
+# ─── Epic: Audit Adapters ─────────────────────────────────────────
+F-090 Audit Log Adapters [level:epic] — 7 adapters for runtime governance evidence
+  F-091 Gateway Adapter [level:feature] — BespokeTracker MCP Compliance Gateway
+  F-092 GitHub Actions Adapter [level:feature] — GitHub workflow execution logs
+  F-093 GitLab CI Adapter [level:feature] — GitLab pipeline logs
+  F-094 Kong Adapter [level:feature] — Kong API gateway traffic
+  F-095 Gravitee Adapter [level:feature] — Gravitee API management
+  F-096 Vanta Adapter [level:feature] — Vanta audit log feed
+  F-097 File Adapter [level:feature] — Local JSON/CSV audit files
+
+# ─── Epic: Dashboard ──────────────────────────────────────────────
+F-100 Web Dashboard [level:epic] — Browser-based compliance interface
+  F-101 Control Status Matrix [level:feature] — Framework view with met/partial/gap status
+  F-102 Score Timeline [level:feature] — Score history chart
+  F-103 Demo Catalog [level:feature] — Pre-built demo repos for evaluation
+  F-104 Compare Panel [level:feature] — Side-by-side scan comparison
+  F-105 Repo Sidebar [level:feature] — Repository-centric navigation
+  F-106 Narration View [level:feature] — LLM-powered scan narrative with SSE streaming
+
+# ─── Epic: Platform & Distribution ────────────────────────────────
+F-110 Platform Infrastructure [level:epic] — Distribution and operational features
+  F-111 CLI [level:feature design:required] — 37 commands across 5 groups
+  F-112 REST API [level:feature design:required] — FastAPI endpoints for all operations
+  F-113 MCP Server [level:feature] — 14 Model Context Protocol tools for LLM integration
+  F-114 Docker Image [level:feature] — Container distribution on Docker Hub
+  F-115 PyPI Package [level:feature] — pip install bespoketracker-comply
+  F-116 Continuous Monitor [level:feature] — Daemon-based ongoing compliance checks
+  F-117 LLM Narration [level:feature] — LLM-powered scan narratives and chat
+  F-118 Tier System [level:feature] — Free/Pro/Enterprise feature gating
+  F-119 E2E Encryption [level:feature] — Client-side AES-256-GCM for scan data
+  F-120 Funded Scans [level:feature] — Invite-only scan voucher system
+
+# ─── Dependencies ─────────────────────────────────────────────────
+D-001 F-007→F-002 depends_on [weight:1.0] — Evaluation requires scanned codebase model
+D-002 F-008→F-002 depends_on [weight:1.0] — Evidence collection requires codebase scan
+D-003 F-012→F-007 depends_on [weight:0.8] — Multi-framework needs single-framework evaluation
+D-004 F-013→F-051 depends_on [weight:0.8] — Incremental needs scan history for baseline
+D-005 F-041→F-008 depends_on [weight:1.0] — Strategies are mapped to evidence functions
+D-006 F-042→F-041 depends_on [weight:0.8] — Ranking uses strategy library
+D-007 F-043→F-042 depends_on [weight:0.8] — Roadmap uses ranked remediations
+D-008 F-044→F-043 depends_on [weight:0.6] — Code gen builds on roadmap priorities
+D-009 F-045→F-044 depends_on [weight:0.6] — Correction loop validates generated fixes
+D-010 F-052→F-051 depends_on [weight:1.0] — Diff requires two stored scans
+D-011 F-053→F-051 depends_on [weight:1.0] — Baseline requires stored scan
+D-012 F-054→F-051 depends_on [weight:1.0] — Forecast requires scan history
+D-013 F-061→F-007 depends_on [weight:1.0] — Gate runs a full evaluation
+D-014 F-071→F-074 depends_on [weight:0.8] — SARIF import uses CWE mapping
+D-015 F-101→F-007 depends_on [weight:1.0] — Dashboard displays evaluation results
+D-016 F-106→F-117 depends_on [weight:1.0] — Narration view requires narration engine
+D-017 F-113→F-112 depends_on [weight:0.5] — MCP server wraps Python API (not REST)
+D-018 F-116→F-001 depends_on [weight:1.0] — Monitor runs periodic scans
+D-019 F-011→F-090 enables [weight:0.8] — Adapters feed traffic layer evidence

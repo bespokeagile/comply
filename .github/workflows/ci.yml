@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: ['3.9', '3.10', '3.11', '3.12']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          pip install -e ".[semantic,docx]"
+          pip install pytest
+
+      - name: Run tests
+        run: pytest tests/ -v --tb=short
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Check imports
+        run: |
+          pip install -e .
+          python -c "from comply.scanner import run_comply_scan; print('Import OK')"
+          python -c "from comply._vendor.compliance_eval import evaluate_compliance; print('Eval OK')"
+          python -c "from comply.app import create_comply_app; print('App OK')"
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Build package
+        run: |
+          pip install build
+          python -m build
+
+      - name: Verify wheel contents
+        run: |
+          pip install dist/*.whl
+          bespoketracker-comply frameworks
+          bespoketracker-comply license

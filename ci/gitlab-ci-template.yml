@@ -1,0 +1,73 @@
+# BespokeTracker Comply — GitLab CI/CD Template
+#
+# Usage in your .gitlab-ci.yml:
+#
+#   include:
+#     - local: comply/ci/gitlab-ci-template.yml
+#
+#   comply-scan:
+#     extends: .comply-scan
+#     variables:
+#       COMPLY_FRAMEWORK: "eu-ai-act"
+#       COMPLY_FAIL_BELOW: "50"
+
+.comply-scan:
+  stage: test
+  image: python:3.10-slim
+  variables:
+    COMPLY_FRAMEWORK: "eu-ai-act"
+    COMPLY_DEPTH: "content"
+    COMPLY_FAIL_BELOW: ""
+    COMPLY_FAIL_ON_REGRESSION: "false"
+    COMPLY_LLM_PROVIDER: "anthropic"
+    COMPLY_MAX_FILES: "500"
+    COMPLY_SARIF_PATH: ""
+  before_script:
+    - pip install -q bespoketracker-comply
+    - mkdir -p comply-reports
+  script:
+    - |
+      ARGS=". --framework ${COMPLY_FRAMEWORK} --depth ${COMPLY_DEPTH}"
+      ARGS="${ARGS} --output ./comply-reports --max-files ${COMPLY_MAX_FILES}"
+
+      if [ -n "${COMPLY_LLM_KEY}" ]; then
+        ARGS="${ARGS} --llm-key ${COMPLY_LLM_KEY} --llm-provider ${COMPLY_LLM_PROVIDER}"
+      fi
+
+      if [ -n "${COMPLY_FAIL_BELOW}" ]; then
+        ARGS="${ARGS} --fail-below ${COMPLY_FAIL_BELOW}"
+      fi
+
+      if [ "${COMPLY_FAIL_ON_REGRESSION}" = "true" ]; then
+        ARGS="${ARGS} --fail-on-regression"
+      fi
+
+      # JSON + SARIF + Markdown reports
+      python -m comply scan ${ARGS} --format json --export-formats sarif,markdown
+
+      # JUnit report for GitLab test integration
+      python -m comply scan . --framework ${COMPLY_FRAMEWORK} --depth ${COMPLY_DEPTH} \
+        --format junit --no-cache > comply-reports/comply-junit.xml 2>/dev/null || true
+
+      # SARIF merge: import external security findings if provided
+      if [ -n "${COMPLY_SARIF_PATH}" ] && [ -f "${COMPLY_SARIF_PATH}" ]; then
+        echo "Merging external SARIF findings from ${COMPLY_SARIF_PATH}"
+        python -m comply import "${COMPLY_SARIF_PATH}" \
+          --framework ${COMPLY_FRAMEWORK} \
+          --repo . \
+          --format json \
+          --output ./comply-reports || echo "WARNING: SARIF merge failed"
+      fi
+
+      # Terminal summary
+      python -m comply scan . --framework ${COMPLY_FRAMEWORK} --depth ${COMPLY_DEPTH} \
+        --no-cache || true
+
+  artifacts:
+    when: always
+    paths:
+      - comply-reports/
+    reports:
+      junit: comply-reports/comply-junit.xml
+    expire_in: 30 days
+  allow_failure: false

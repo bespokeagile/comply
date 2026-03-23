@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="SmallSuite" tests="5" failures="0" errors="0" skipped="0" time="0.823">
+    <testcase classname="test_basic" name="test_app_starts" time="0.123"/>
+    <testcase classname="test_basic" name="test_healthcheck" time="0.089"/>
+    <testcase classname="test_basic" name="test_config_loads" time="0.134"/>
+    <testcase classname="test_basic" name="test_db_connection" time="0.234"/>
+    <testcase classname="test_basic" name="test_response_format" time="0.243"/>
+  </testsuite>
+</testsuites>

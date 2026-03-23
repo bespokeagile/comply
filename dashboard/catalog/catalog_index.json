@@ -1,0 +1,18 @@
+{
+  "version": "1.1.0",
+  "generated": "2026-03-06T23:36:26.188104+00:00",
+  "frameworks": {
+    "eu_ai_act": {
+      "file": "eu_ai_act.json",
+      "version": "1.0.0"
+    },
+    "nist_ai_rmf": {
+      "file": "nist_ai_rmf.json",
+      "version": "1.0.0"
+    },
+    "soc2_ai": {
+      "file": "soc2_ai.json",
+      "version": "1.0.0"
+    }
+  }
+}

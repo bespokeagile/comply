@@ -1,0 +1,9 @@
+repos:
+  - slug: scikit-learn
+    name: scikit-learn
+    url: https://github.com/scikit-learn/scikit-learn
+    frameworks: [eu_ai_act]
+  - slug: bespoketracker
+    name: BespokeTracker
+    url: https://github.com/atdash/BespokeTracker
+    frameworks: [eu_ai_act, soc2_ai, nist_ai_rmf]

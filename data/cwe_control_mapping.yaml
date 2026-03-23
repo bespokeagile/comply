@@ -1,0 +1,1949 @@
+# CWE-to-Compliance Control Mapping
+# Maps Common Weakness Enumeration IDs to compliance framework controls
+# Each mapping includes strength (direct/indirect/contributing) and rationale
+# Used by SARIF import to map security findings to compliance status
+#
+# Framework IDs match keys in frameworks.yaml:
+#   eu_ai_act, nist_ai_rmf, iso_42001, soc2_ai, owasp_llm_top10,
+#   california_ab_2013, california_sb_942, colorado_sb_24_205,
+#   insurance_attestation
+
+version: "1.0"
+generated: "2026-03-09"
+
+mappings:
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Input Validation & Injection (CWE-20, 22, 77, 78, 79, 89, 94, 116)
+  # ──────────────────────────────────────────────────────────────────────
+
+  CWE-20:
+    name: "Improper Input Validation"
+    owasp_top10: "A03:2021"
+    frameworks:
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: direct
+          rationale: "Unvalidated input is a foreseeable risk to system safety."
+        - controlId: "9.6"
+          strength: indirect
+          rationale: "Testing must cover input validation boundary conditions."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: direct
+          rationale: "Input validation failures are systematic risks that must be identified."
+        - controlId: "MS-1.1"
+          strength: indirect
+          rationale: "Input validation coverage is a trustworthiness metric."
+      iso_42001:
+        - controlId: "8.1"
+          strength: direct
+          rationale: "Operational controls must include input validation processes."
+      soc2_ai:
+        - controlId: "PI1-AI"
+          strength: direct
+          rationale: "Processing integrity requires validated inputs for accurate outputs."
+      owasp_llm_top10:
+        - controlId: "LLM01-1"
+          strength: direct
+          rationale: "Input sanitisation is the primary defence against prompt injection."
+        - controlId: "LLM03-MCP2"
+          strength: direct
+          rationale: "MCP tool inputs must be validated against defined schemas."
+
+  CWE-22:
+    name: "Improper Limitation of a Pathname to a Restricted Directory (Path Traversal)"
+    owasp_top10: "A01:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "Path traversal bypasses logical access controls on files and data."
+        - controlId: "C1-AI"
+          strength: direct
+          rationale: "Traversal can expose confidential training data or inference inputs."
+      owasp_llm_top10:
+        - controlId: "LLM02-1"
+          strength: indirect
+          rationale: "Path traversal can lead to disclosure of sensitive training data."
+        - controlId: "LLM03-MCP2"
+          strength: direct
+          rationale: "MCP tool file path inputs must be validated to prevent traversal."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: indirect
+          rationale: "File access vulnerabilities are foreseeable system risks."
+      iso_42001:
+        - controlId: "8.1"
+          strength: indirect
+          rationale: "Operational controls must prevent unauthorised file access."
+
+  CWE-77:
+    name: "Improper Neutralization of Special Elements used in a Command (Command Injection)"
+    owasp_top10: "A03:2021"
+    frameworks:
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: direct
+          rationale: "Command injection poses critical risk to system safety and integrity."
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "Command injection bypasses access controls to execute arbitrary operations."
+        - controlId: "PI1-AI"
+          strength: direct
+          rationale: "Injected commands compromise processing integrity."
+      owasp_llm_top10:
+        - controlId: "LLM05-1"
+          strength: direct
+          rationale: "LLM output used in command execution without validation enables injection."
+        - controlId: "LLM06-1"
+          strength: indirect
+          rationale: "Excessive tool access amplifies command injection impact."
+      nist_ai_rmf:
+        - controlId: "MG-2.1"
+          strength: indirect
+          rationale: "Command injection scenarios must be covered by response plans."
+
+  CWE-78:
+    name: "Improper Neutralization of Special Elements used in an OS Command (OS Command Injection)"
+    owasp_top10: "A03:2021"
+    frameworks:
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: direct
+          rationale: "OS command injection is a critical foreseeable safety risk."
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "OS command injection grants unauthorised system-level access."
+        - controlId: "PI1-AI"
+          strength: direct
+          rationale: "Arbitrary OS commands compromise system processing integrity."
+      owasp_llm_top10:
+        - controlId: "LLM05-1"
+          strength: direct
+          rationale: "LLM outputs passed to shell commands without sanitisation enable injection."
+        - controlId: "LLM06-1"
+          strength: direct
+          rationale: "Agent shell access without least-privilege scoping enables OS injection."
+      nist_ai_rmf:
+        - controlId: "MG-2.1"
+          strength: indirect
+          rationale: "OS command injection incidents require documented response procedures."
+      insurance_attestation:
+        - controlId: "INS-5"
+          strength: indirect
+          rationale: "System compromise via command injection requires incident response procedures."
+
+  CWE-79:
+    name: "Improper Neutralization of Input During Web Page Generation (Cross-site Scripting)"
+    owasp_top10: "A03:2021"
+    frameworks:
+      eu_ai_act:
+        - controlId: "13.1"
+          strength: indirect
+          rationale: "XSS can manipulate displayed AI system output, undermining transparency."
+      soc2_ai:
+        - controlId: "PI1-AI"
+          strength: direct
+          rationale: "XSS compromises the integrity of data presented to users."
+        - controlId: "CC6-AI"
+          strength: indirect
+          rationale: "XSS can be used to steal session tokens and bypass access controls."
+      owasp_llm_top10:
+        - controlId: "LLM05-1"
+          strength: direct
+          rationale: "LLM output rendered in HTML without escaping creates XSS vectors."
+        - controlId: "LLM01-3"
+          strength: indirect
+          rationale: "Indirect prompt injection via XSS can manipulate LLM context."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: indirect
+          rationale: "XSS in AI interfaces is a user-facing risk requiring identification."
+      california_sb_942:
+        - controlId: "SB942-1"
+          strength: indirect
+          rationale: "XSS can tamper with AI attribution tools, undermining transparency."
+
+  CWE-89:
+    name: "Improper Neutralization of Special Elements used in an SQL Command (SQL Injection)"
+    owasp_top10: "A03:2021"
+    frameworks:
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: direct
+          rationale: "SQL injection is a foreseeable risk to data integrity and safety."
+        - controlId: "12.1"
+          strength: indirect
+          rationale: "SQL injection can corrupt or destroy audit logs."
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "SQL injection bypasses logical access controls on databases."
+        - controlId: "C1-AI"
+          strength: direct
+          rationale: "SQL injection can exfiltrate confidential training data."
+        - controlId: "PI1-AI"
+          strength: direct
+          rationale: "Injected queries compromise data processing integrity."
+      owasp_llm_top10:
+        - controlId: "LLM05-1"
+          strength: direct
+          rationale: "LLM-generated SQL queries without parameterisation create injection vectors."
+      nist_ai_rmf:
+        - controlId: "MG-2.1"
+          strength: indirect
+          rationale: "Data breach via SQL injection requires documented incident response."
+      insurance_attestation:
+        - controlId: "INS-1"
+          strength: indirect
+          rationale: "SQL injection risk must be tracked in the AI risk register."
+
+  CWE-94:
+    name: "Improper Control of Generation of Code (Code Injection)"
+    owasp_top10: "A03:2021"
+    frameworks:
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: direct
+          rationale: "Code injection is a critical foreseeable risk to system integrity."
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "Code injection bypasses all access controls via arbitrary execution."
+        - controlId: "PI1-AI"
+          strength: direct
+          rationale: "Injected code fundamentally compromises processing integrity."
+      owasp_llm_top10:
+        - controlId: "LLM05-1"
+          strength: direct
+          rationale: "LLM-generated code executed without sandboxing enables code injection."
+        - controlId: "LLM06-1"
+          strength: direct
+          rationale: "Agent code execution tools without privilege scoping amplify injection risk."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: direct
+          rationale: "Code injection in AI pipelines is a systematic risk requiring identification."
+      iso_42001:
+        - controlId: "6.1"
+          strength: indirect
+          rationale: "Code injection represents a material risk to the AI management system."
+
+  CWE-116:
+    name: "Improper Encoding or Escaping of Output"
+    owasp_top10: "A03:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "PI1-AI"
+          strength: direct
+          rationale: "Improper output encoding compromises data processing integrity."
+      owasp_llm_top10:
+        - controlId: "LLM05-1"
+          strength: direct
+          rationale: "Unescaped LLM output passed to interpreters enables downstream attacks."
+        - controlId: "LLM01-3"
+          strength: indirect
+          rationale: "Improper encoding of LLM outputs can enable indirect injection."
+      nist_ai_rmf:
+        - controlId: "MS-1.1"
+          strength: indirect
+          rationale: "Output encoding correctness is measurable as a trustworthiness metric."
+      eu_ai_act:
+        - controlId: "9.6"
+          strength: indirect
+          rationale: "Testing must verify proper encoding of system outputs."
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Information Disclosure (CWE-200, 209, 532)
+  # ──────────────────────────────────────────────────────────────────────
+
+  CWE-200:
+    name: "Exposure of Sensitive Information to an Unauthorized Actor"
+    owasp_top10: "A01:2021"
+    frameworks:
+      eu_ai_act:
+        - controlId: "13.1"
+          strength: indirect
+          rationale: "Transparency controls must not inadvertently expose sensitive data."
+      soc2_ai:
+        - controlId: "C1-AI"
+          strength: direct
+          rationale: "Confidentiality controls must prevent unauthorised information exposure."
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "Access controls must prevent sensitive information disclosure."
+      owasp_llm_top10:
+        - controlId: "LLM02-1"
+          strength: direct
+          rationale: "Sensitive information in LLM training data or responses must be protected."
+        - controlId: "LLM02-2"
+          strength: direct
+          rationale: "Output filtering must detect and redact sensitive information."
+      california_ab_2013:
+        - controlId: "AB2013-2"
+          strength: indirect
+          rationale: "Provenance data must not expose sensitive implementation details."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: direct
+          rationale: "Information exposure is a risk to individuals and organisations."
+      insurance_attestation:
+        - controlId: "INS-1"
+          strength: indirect
+          rationale: "Information disclosure risks must be tracked in the risk register."
+
+  CWE-209:
+    name: "Generation of Error Message Containing Sensitive Information"
+    owasp_top10: "A04:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "C1-AI"
+          strength: direct
+          rationale: "Error messages must not expose confidential system information."
+      owasp_llm_top10:
+        - controlId: "LLM02-2"
+          strength: direct
+          rationale: "LLM error responses must be filtered to prevent sensitive data leakage."
+        - controlId: "LLM03-MCP6"
+          strength: direct
+          rationale: "MCP error responses must be sanitised to hide internal details."
+        - controlId: "LLM07-1"
+          strength: indirect
+          rationale: "Verbose errors can reveal system prompt structure or internals."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: indirect
+          rationale: "Error message information leakage is an identifiable system risk."
+
+  CWE-532:
+    name: "Insertion of Sensitive Information into Log File"
+    owasp_top10: "A09:2021"
+    frameworks:
+      eu_ai_act:
+        - controlId: "12.1"
+          strength: indirect
+          rationale: "Logging must capture events without recording sensitive data."
+        - controlId: "12.2"
+          strength: indirect
+          rationale: "Traceability must be maintained without compromising confidentiality."
+      soc2_ai:
+        - controlId: "C1-AI"
+          strength: direct
+          rationale: "Logs must not contain confidential information like credentials or PII."
+        - controlId: "CC7-AI"
+          strength: indirect
+          rationale: "Monitoring infrastructure must protect logged data."
+      owasp_llm_top10:
+        - controlId: "LLM02-1"
+          strength: direct
+          rationale: "Sensitive data logged during LLM inference creates disclosure risk."
+        - controlId: "LLM03-MCP4"
+          strength: indirect
+          rationale: "MCP audit logs must be structured to avoid capturing secrets."
+      nist_ai_rmf:
+        - controlId: "GV-1.1"
+          strength: indirect
+          rationale: "Logging policies must address sensitive data handling requirements."
+      insurance_attestation:
+        - controlId: "INS-2"
+          strength: indirect
+          rationale: "Audit trails must not become vectors for sensitive data exposure."
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Privilege & Access Control (CWE-250, 269, 276, 284, 285, 287, 306)
+  # ──────────────────────────────────────────────────────────────────────
+
+  CWE-250:
+    name: "Execution with Unnecessary Privileges"
+    owasp_top10: "A04:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "Access controls must enforce least privilege for all AI components."
+      owasp_llm_top10:
+        - controlId: "LLM06-1"
+          strength: direct
+          rationale: "LLM agent tools must follow least-privilege scoping."
+        - controlId: "LLM03-MCP7"
+          strength: direct
+          rationale: "MCP tool permissions must use least privilege with explicit capability declarations."
+      eu_ai_act:
+        - controlId: "14.4a"
+          strength: indirect
+          rationale: "Excessive privileges undermine human oversight capabilities."
+      nist_ai_rmf:
+        - controlId: "GV-3.1"
+          strength: indirect
+          rationale: "Privilege assignments must be governed and documented."
+      iso_42001:
+        - controlId: "8.1"
+          strength: indirect
+          rationale: "Operational controls must enforce appropriate privilege levels."
+
+  CWE-269:
+    name: "Improper Privilege Management"
+    owasp_top10: "A04:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "Privilege management failures undermine access control effectiveness."
+      owasp_llm_top10:
+        - controlId: "LLM06-1"
+          strength: direct
+          rationale: "Improper privilege management for LLM agents grants excessive agency."
+        - controlId: "LLM03-MCP7"
+          strength: direct
+          rationale: "MCP tools require role-based access scoping and privilege declarations."
+      eu_ai_act:
+        - controlId: "14.4d"
+          strength: indirect
+          rationale: "Privilege escalation can prevent human ability to override AI decisions."
+      nist_ai_rmf:
+        - controlId: "GV-3.1"
+          strength: direct
+          rationale: "AI system access governance must manage privileges appropriately."
+      insurance_attestation:
+        - controlId: "INS-3"
+          strength: indirect
+          rationale: "AI governance framework must include privilege management controls."
+
+  CWE-276:
+    name: "Incorrect Default Permissions"
+    owasp_top10: "A04:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "Default permissions must restrict access to authorised individuals only."
+        - controlId: "C1-AI"
+          strength: indirect
+          rationale: "Overly permissive defaults can expose confidential AI data."
+      owasp_llm_top10:
+        - controlId: "LLM06-1"
+          strength: indirect
+          rationale: "Permissive defaults on agent tools expand the attack surface."
+        - controlId: "LLM08-1"
+          strength: indirect
+          rationale: "Default permissions on vector stores must restrict access."
+      nist_ai_rmf:
+        - controlId: "GV-3.1"
+          strength: indirect
+          rationale: "Default permission configurations must be part of governance decisions."
+
+  CWE-284:
+    name: "Improper Access Control"
+    owasp_top10: "A01:2021"
+    frameworks:
+      eu_ai_act:
+        - controlId: "14.4a"
+          strength: indirect
+          rationale: "Broken access control can prevent proper human oversight of AI systems."
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "Access control is a core trust services criterion."
+      owasp_llm_top10:
+        - controlId: "LLM06-1"
+          strength: direct
+          rationale: "Access control failures on agent capabilities enable excessive agency."
+        - controlId: "LLM03-MCP1"
+          strength: direct
+          rationale: "MCP endpoints require authentication to prevent unauthorised access."
+        - controlId: "LLM08-1"
+          strength: indirect
+          rationale: "Access control on vector stores prevents unauthorised data retrieval."
+      nist_ai_rmf:
+        - controlId: "GV-3.1"
+          strength: direct
+          rationale: "Access to AI systems must be governed and documented."
+      iso_42001:
+        - controlId: "8.1"
+          strength: direct
+          rationale: "Operational access controls are required for AI management."
+      colorado_sb_24_205:
+        - controlId: "CO205-5"
+          strength: indirect
+          rationale: "Governance programs must include access control accountability."
+      insurance_attestation:
+        - controlId: "INS-3"
+          strength: indirect
+          rationale: "AI governance frameworks must include access control mechanisms."
+
+  CWE-285:
+    name: "Improper Authorization"
+    owasp_top10: "A01:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "Authorization controls must restrict AI system access by role."
+      owasp_llm_top10:
+        - controlId: "LLM06-1"
+          strength: direct
+          rationale: "Authorization failures enable LLM agents to perform unintended actions."
+        - controlId: "LLM03-MCP1"
+          strength: direct
+          rationale: "MCP endpoints require proper authorization checks."
+        - controlId: "LLM03-MCP7"
+          strength: direct
+          rationale: "MCP tool permissions require role-based access scoping."
+      nist_ai_rmf:
+        - controlId: "GV-3.1"
+          strength: direct
+          rationale: "Authorization governance for AI system decisions must be documented."
+      california_sb_942:
+        - controlId: "SB942-4"
+          strength: indirect
+          rationale: "Accountability mechanisms require proper authorization enforcement."
+
+  CWE-287:
+    name: "Improper Authentication"
+    owasp_top10: "A07:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "Authentication is the foundation of logical access control."
+      owasp_llm_top10:
+        - controlId: "LLM03-MCP1"
+          strength: direct
+          rationale: "MCP server endpoints must require authentication."
+      eu_ai_act:
+        - controlId: "14.4a"
+          strength: indirect
+          rationale: "Authentication failures prevent verifying identity of human overseers."
+      nist_ai_rmf:
+        - controlId: "GV-3.1"
+          strength: direct
+          rationale: "Authentication governance for AI system access must be documented."
+      iso_42001:
+        - controlId: "8.1"
+          strength: indirect
+          rationale: "Operational controls must include authentication mechanisms."
+      colorado_sb_24_205:
+        - controlId: "CO205-5"
+          strength: indirect
+          rationale: "Governance programs must enforce authentication for AI system access."
+      insurance_attestation:
+        - controlId: "INS-3"
+          strength: indirect
+          rationale: "AI governance must include authentication controls."
+
+  CWE-306:
+    name: "Missing Authentication for Critical Function"
+    owasp_top10: "A07:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "Critical AI functions must require authentication."
+      owasp_llm_top10:
+        - controlId: "LLM03-MCP1"
+          strength: direct
+          rationale: "MCP tool endpoints must require authentication for all operations."
+        - controlId: "LLM06-1"
+          strength: direct
+          rationale: "Unauthenticated access to agent tools enables excessive agency."
+        - controlId: "LLM06-2"
+          strength: indirect
+          rationale: "High-impact actions without authentication bypass human oversight."
+      eu_ai_act:
+        - controlId: "14.4d"
+          strength: indirect
+          rationale: "Missing authentication on override functions undermines human control."
+      nist_ai_rmf:
+        - controlId: "GV-3.1"
+          strength: direct
+          rationale: "Critical AI functions must have documented authentication requirements."
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Cryptography & Data Protection (CWE-311, 312, 319, 326, 327, 614)
+  # ──────────────────────────────────────────────────────────────────────
+
+  CWE-311:
+    name: "Missing Encryption of Sensitive Data"
+    owasp_top10: "A02:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "C1-AI"
+          strength: direct
+          rationale: "Confidential AI data must be encrypted during collection and processing."
+      owasp_llm_top10:
+        - controlId: "LLM02-1"
+          strength: direct
+          rationale: "Sensitive data in LLM pipelines must be encrypted to prevent disclosure."
+        - controlId: "LLM03-MCP8"
+          strength: direct
+          rationale: "MCP network communications must use TLS encryption."
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: indirect
+          rationale: "Missing encryption is a foreseeable risk to fundamental rights."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: indirect
+          rationale: "Unencrypted sensitive data is a material risk to individuals."
+      iso_42001:
+        - controlId: "6.1"
+          strength: indirect
+          rationale: "Missing encryption represents a risk to AI management system integrity."
+      insurance_attestation:
+        - controlId: "INS-1"
+          strength: indirect
+          rationale: "Encryption gaps must be tracked in the AI risk register."
+
+  CWE-312:
+    name: "Cleartext Storage of Sensitive Information"
+    owasp_top10: "A02:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "C1-AI"
+          strength: direct
+          rationale: "Sensitive information must be encrypted at rest, not stored in cleartext."
+      owasp_llm_top10:
+        - controlId: "LLM02-1"
+          strength: direct
+          rationale: "Cleartext storage of training data or credentials enables disclosure."
+        - controlId: "LLM03-MCP3"
+          strength: direct
+          rationale: "MCP servers must not store credentials in cleartext in source code."
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: indirect
+          rationale: "Cleartext storage of personal data is a foreseeable rights risk."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: indirect
+          rationale: "Cleartext storage is a systematic data protection risk."
+      california_ab_2013:
+        - controlId: "AB2013-2"
+          strength: indirect
+          rationale: "Provenance data stored in cleartext may expose sensitive details."
+
+  CWE-319:
+    name: "Cleartext Transmission of Sensitive Information"
+    owasp_top10: "A02:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "C1-AI"
+          strength: direct
+          rationale: "Sensitive data must be encrypted in transit."
+      owasp_llm_top10:
+        - controlId: "LLM03-MCP8"
+          strength: direct
+          rationale: "MCP servers must use TLS for all remote connections."
+        - controlId: "LLM02-1"
+          strength: direct
+          rationale: "Cleartext transmission can expose sensitive LLM data in transit."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: indirect
+          rationale: "Cleartext transmission is a foreseeable data exposure risk."
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: indirect
+          rationale: "Unencrypted data transmission is a foreseeable safety risk."
+
+  CWE-326:
+    name: "Inadequate Encryption Strength"
+    owasp_top10: "A02:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "C1-AI"
+          strength: direct
+          rationale: "Encryption strength must be adequate to protect confidential data."
+      owasp_llm_top10:
+        - controlId: "LLM02-1"
+          strength: indirect
+          rationale: "Weak encryption on LLM data stores may allow sensitive data extraction."
+        - controlId: "LLM03-MCP8"
+          strength: indirect
+          rationale: "TLS configuration must use adequate cipher strength."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: indirect
+          rationale: "Weak encryption is a risk that must be identified and managed."
+
+  CWE-327:
+    name: "Use of a Broken or Risky Cryptographic Algorithm"
+    owasp_top10: "A02:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "C1-AI"
+          strength: direct
+          rationale: "Broken cryptography fails to protect confidential AI data."
+      owasp_llm_top10:
+        - controlId: "LLM02-1"
+          strength: indirect
+          rationale: "Weak algorithms may allow decryption of sensitive LLM training data."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: indirect
+          rationale: "Use of broken cryptographic algorithms is a systematic risk."
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: indirect
+          rationale: "Weak cryptography is a foreseeable risk to data protection."
+      iso_42001:
+        - controlId: "6.1"
+          strength: indirect
+          rationale: "Cryptographic weaknesses are risks to the AI management system."
+
+  CWE-614:
+    name: "Sensitive Cookie in HTTPS Session Without 'Secure' Attribute"
+    owasp_top10: "A05:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "Session cookies without Secure flag can be intercepted."
+        - controlId: "C1-AI"
+          strength: indirect
+          rationale: "Session hijacking via insecure cookies can expose confidential data."
+      owasp_llm_top10:
+        - controlId: "LLM03-MCP8"
+          strength: indirect
+          rationale: "MCP session management must enforce secure cookie attributes."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: indirect
+          rationale: "Insecure session management is an identifiable security risk."
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Credentials & Secrets (CWE-522, 798)
+  # ──────────────────────────────────────────────────────────────────────
+
+  CWE-522:
+    name: "Insufficiently Protected Credentials"
+    owasp_top10: "A07:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "Credential protection is fundamental to access control."
+        - controlId: "C1-AI"
+          strength: direct
+          rationale: "Exposed credentials compromise data confidentiality."
+      owasp_llm_top10:
+        - controlId: "LLM03-MCP3"
+          strength: direct
+          rationale: "MCP servers must load secrets from vaults, not hardcode them."
+        - controlId: "LLM02-1"
+          strength: indirect
+          rationale: "Poorly protected API keys can expose LLM inference data."
+      nist_ai_rmf:
+        - controlId: "GV-3.1"
+          strength: indirect
+          rationale: "Credential management must be governed for AI system access."
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: indirect
+          rationale: "Credential compromise is a foreseeable risk to system integrity."
+      insurance_attestation:
+        - controlId: "INS-1"
+          strength: indirect
+          rationale: "Credential risks must be tracked in the AI risk register."
+
+  CWE-798:
+    name: "Use of Hard-coded Credentials"
+    owasp_top10: "A07:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "Hard-coded credentials bypass access control mechanisms."
+        - controlId: "CC8-AI"
+          strength: indirect
+          rationale: "Hard-coded credentials cannot be rotated through change management."
+      owasp_llm_top10:
+        - controlId: "LLM03-MCP3"
+          strength: direct
+          rationale: "MCP source code must not contain hardcoded credentials."
+        - controlId: "LLM03-1"
+          strength: indirect
+          rationale: "Hard-coded credentials in supply chain components compromise provenance."
+      nist_ai_rmf:
+        - controlId: "GV-3.1"
+          strength: direct
+          rationale: "Credential governance cannot function with hard-coded secrets."
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: indirect
+          rationale: "Hard-coded credentials are a foreseeable security risk."
+      iso_42001:
+        - controlId: "8.1"
+          strength: indirect
+          rationale: "Operational controls must prevent hard-coded credential usage."
+      insurance_attestation:
+        - controlId: "INS-4"
+          strength: indirect
+          rationale: "Controls documentation must address credential management policies."
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Web Security (CWE-352, 601, 611, 918, 1021)
+  # ──────────────────────────────────────────────────────────────────────
+
+  CWE-352:
+    name: "Cross-Site Request Forgery (CSRF)"
+    owasp_top10: "A01:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "CSRF bypasses authentication by exploiting trusted sessions."
+        - controlId: "PI1-AI"
+          strength: indirect
+          rationale: "CSRF can trigger unauthorised AI system processing."
+      owasp_llm_top10:
+        - controlId: "LLM03-MCP1"
+          strength: indirect
+          rationale: "CSRF on MCP endpoints can trigger unauthorised tool invocations."
+        - controlId: "LLM06-2"
+          strength: indirect
+          rationale: "CSRF can bypass human oversight on high-impact agent actions."
+      eu_ai_act:
+        - controlId: "14.4d"
+          strength: indirect
+          rationale: "CSRF can trigger AI actions without genuine human intent."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: indirect
+          rationale: "CSRF is an identifiable risk to AI system interfaces."
+
+  CWE-601:
+    name: "URL Redirection to Untrusted Site (Open Redirect)"
+    owasp_top10: "A01:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: indirect
+          rationale: "Open redirects can facilitate credential phishing attacks."
+      owasp_llm_top10:
+        - controlId: "LLM01-3"
+          strength: indirect
+          rationale: "Open redirects in LLM-powered apps can redirect to malicious prompts."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: indirect
+          rationale: "URL redirection is a foreseeable phishing risk."
+      california_sb_942:
+        - controlId: "SB942-1"
+          strength: indirect
+          rationale: "Open redirects can undermine AI transparency tool integrity."
+
+  CWE-611:
+    name: "Improper Restriction of XML External Entity Reference (XXE)"
+    owasp_top10: "A05:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "XXE can read arbitrary files, bypassing access controls."
+        - controlId: "C1-AI"
+          strength: direct
+          rationale: "XXE can exfiltrate confidential data via external entity resolution."
+      owasp_llm_top10:
+        - controlId: "LLM03-MCP2"
+          strength: indirect
+          rationale: "XML inputs to MCP tools must be validated to prevent XXE."
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: indirect
+          rationale: "XXE is a foreseeable risk in systems processing XML data."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: indirect
+          rationale: "XXE in data ingestion pipelines is a systematic risk."
+
+  CWE-918:
+    name: "Server-Side Request Forgery (SSRF)"
+    owasp_top10: "A10:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "SSRF bypasses network-level access controls to reach internal systems."
+        - controlId: "C1-AI"
+          strength: indirect
+          rationale: "SSRF can access confidential data on internal services."
+      owasp_llm_top10:
+        - controlId: "LLM05-1"
+          strength: indirect
+          rationale: "LLM-generated URLs used in server requests can enable SSRF."
+        - controlId: "LLM06-1"
+          strength: indirect
+          rationale: "Agent network access without URL allow-listing enables SSRF."
+        - controlId: "LLM03-MCP2"
+          strength: indirect
+          rationale: "MCP tool URL inputs must be validated to prevent SSRF."
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: indirect
+          rationale: "SSRF is a foreseeable risk in AI systems with external data access."
+      nist_ai_rmf:
+        - controlId: "MP-4.1"
+          strength: indirect
+          rationale: "SSRF exploits dependencies between system components."
+
+  CWE-1021:
+    name: "Improper Restriction of Rendered UI Layers or Frames (Clickjacking)"
+    owasp_top10: "A04:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: indirect
+          rationale: "Clickjacking can trick users into performing unauthorised actions."
+      owasp_llm_top10:
+        - controlId: "LLM06-2"
+          strength: indirect
+          rationale: "Clickjacking can bypass human oversight approval workflows."
+      eu_ai_act:
+        - controlId: "14.4d"
+          strength: indirect
+          rationale: "UI deception undermines genuine human decision-making ability."
+      california_sb_942:
+        - controlId: "SB942-1"
+          strength: indirect
+          rationale: "Clickjacking can obscure AI transparency tool disclosures."
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Authorization Bypass (CWE-862, 863)
+  # ──────────────────────────────────────────────────────────────────────
+
+  CWE-862:
+    name: "Missing Authorization"
+    owasp_top10: "A01:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "Missing authorization allows unrestricted access to AI system resources."
+      owasp_llm_top10:
+        - controlId: "LLM06-1"
+          strength: direct
+          rationale: "Missing authorization on agent tools grants excessive agency."
+        - controlId: "LLM03-MCP1"
+          strength: direct
+          rationale: "MCP endpoints without authorization checks are exposed to abuse."
+        - controlId: "LLM03-MCP7"
+          strength: direct
+          rationale: "Missing authorization violates least-privilege requirements."
+      eu_ai_act:
+        - controlId: "14.4a"
+          strength: indirect
+          rationale: "Missing authorization undermines human oversight controls."
+      nist_ai_rmf:
+        - controlId: "GV-3.1"
+          strength: direct
+          rationale: "Authorization must be part of documented AI system governance."
+      colorado_sb_24_205:
+        - controlId: "CO205-5"
+          strength: indirect
+          rationale: "Governance programs must enforce authorization for AI systems."
+      insurance_attestation:
+        - controlId: "INS-3"
+          strength: indirect
+          rationale: "AI governance framework must include authorization controls."
+
+  CWE-863:
+    name: "Incorrect Authorization"
+    owasp_top10: "A01:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "Incorrect authorization grants improper access to AI resources."
+      owasp_llm_top10:
+        - controlId: "LLM06-1"
+          strength: direct
+          rationale: "Incorrect authorization on agent capabilities enables privilege escalation."
+        - controlId: "LLM03-MCP7"
+          strength: direct
+          rationale: "Incorrect MCP tool permissions violate least-privilege scoping."
+      eu_ai_act:
+        - controlId: "14.4a"
+          strength: indirect
+          rationale: "Authorization errors can grant inappropriate override capabilities."
+      nist_ai_rmf:
+        - controlId: "GV-3.1"
+          strength: direct
+          rationale: "Authorization correctness must be verified through governance."
+      insurance_attestation:
+        - controlId: "INS-2"
+          strength: indirect
+          rationale: "Authorization decisions must be captured in audit trails."
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Resource Management (CWE-400, 434)
+  # ──────────────────────────────────────────────────────────────────────
+
+  CWE-400:
+    name: "Uncontrolled Resource Consumption"
+    owasp_top10: "A05:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "A1-AI"
+          strength: direct
+          rationale: "Uncontrolled resource consumption directly threatens availability."
+      owasp_llm_top10:
+        - controlId: "LLM10-1"
+          strength: direct
+          rationale: "Token and API consumption must be bounded with per-session limits."
+        - controlId: "LLM10-3"
+          strength: direct
+          rationale: "Resource quotas must prevent denial-of-service conditions."
+        - controlId: "LLM06-3"
+          strength: direct
+          rationale: "Agent consumption must be constrained by rate limits and cost caps."
+        - controlId: "LLM03-MCP5"
+          strength: direct
+          rationale: "MCP endpoints require rate limiting to prevent resource abuse."
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: indirect
+          rationale: "Resource exhaustion is a foreseeable risk to system availability."
+      nist_ai_rmf:
+        - controlId: "MG-2.1"
+          strength: indirect
+          rationale: "Resource exhaustion scenarios require documented response plans."
+      insurance_attestation:
+        - controlId: "INS-5"
+          strength: indirect
+          rationale: "Resource exhaustion incidents require response procedures."
+
+  CWE-434:
+    name: "Unrestricted Upload of File with Dangerous Type"
+    owasp_top10: "A04:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "PI1-AI"
+          strength: direct
+          rationale: "File upload validation is required for processing integrity."
+        - controlId: "CC6-AI"
+          strength: indirect
+          rationale: "Unrestricted uploads can bypass access controls via webshell."
+      owasp_llm_top10:
+        - controlId: "LLM04-1"
+          strength: indirect
+          rationale: "Malicious file uploads can poison training data or model artefacts."
+        - controlId: "LLM03-MCP2"
+          strength: indirect
+          rationale: "MCP tool file inputs must be validated for type and content."
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: indirect
+          rationale: "Unrestricted uploads are a foreseeable risk to system integrity."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: indirect
+          rationale: "Dangerous file upload is an identifiable system risk."
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Deserialization & Supply Chain (CWE-502, 1104)
+  # ──────────────────────────────────────────────────────────────────────
+
+  CWE-502:
+    name: "Deserialization of Untrusted Data"
+    owasp_top10: "A08:2021"
+    frameworks:
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: direct
+          rationale: "Insecure deserialization is a critical foreseeable safety risk."
+      soc2_ai:
+        - controlId: "PI1-AI"
+          strength: direct
+          rationale: "Deserialization of untrusted data compromises processing integrity."
+        - controlId: "CC6-AI"
+          strength: indirect
+          rationale: "Deserialization attacks can achieve arbitrary code execution."
+      owasp_llm_top10:
+        - controlId: "LLM04-1"
+          strength: direct
+          rationale: "Deserialisation of untrusted model artefacts can introduce poisoning."
+        - controlId: "LLM03-1"
+          strength: indirect
+          rationale: "Model provenance verification must cover serialised artefacts."
+        - controlId: "LLM03-MCP2"
+          strength: indirect
+          rationale: "MCP tool inputs involving serialised data must be validated."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: direct
+          rationale: "Insecure deserialization is a systematic risk in AI data pipelines."
+      insurance_attestation:
+        - controlId: "INS-1"
+          strength: indirect
+          rationale: "Deserialization risks must be tracked in the AI risk register."
+
+  CWE-1104:
+    name: "Use of Unmaintained Third-Party Components"
+    owasp_top10: "A06:2021"
+    frameworks:
+      owasp_llm_top10:
+        - controlId: "LLM03-3"
+          strength: direct
+          rationale: "Dependencies must be checked against vulnerability databases."
+        - controlId: "LLM03-4"
+          strength: direct
+          rationale: "Dependency versions must be pinned to prevent unreviewed upgrades."
+        - controlId: "LLM03-5"
+          strength: direct
+          rationale: "An inventory of all AI/ML dependencies must be maintained."
+        - controlId: "LLM03-1"
+          strength: indirect
+          rationale: "Unmaintained components compromise supply chain provenance."
+      soc2_ai:
+        - controlId: "CC8-AI"
+          strength: direct
+          rationale: "Third-party component changes must go through change management."
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: indirect
+          rationale: "Unmaintained dependencies are a foreseeable safety risk."
+      nist_ai_rmf:
+        - controlId: "MS-3.1"
+          strength: direct
+          rationale: "Third-party AI component risks must be tracked throughout lifecycle."
+        - controlId: "MP-4.1"
+          strength: direct
+          rationale: "External dependencies and interdependencies must be characterised."
+      iso_42001:
+        - controlId: "10.1"
+          strength: indirect
+          rationale: "Dependency maintenance is part of continual improvement."
+      insurance_attestation:
+        - controlId: "INS-4"
+          strength: indirect
+          rationale: "Policies must address third-party component lifecycle management."
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Protection Mechanism Failures (CWE-693, 732)
+  # ──────────────────────────────────────────────────────────────────────
+
+  CWE-693:
+    name: "Protection Mechanism Failure"
+    owasp_top10: "A07:2021"
+    frameworks:
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: direct
+          rationale: "Failure of protection mechanisms is a critical foreseeable risk."
+        - controlId: "9.6"
+          strength: direct
+          rationale: "Testing must verify protection mechanism effectiveness."
+      soc2_ai:
+        - controlId: "CC7-AI"
+          strength: direct
+          rationale: "Monitoring must detect protection mechanism failures and anomalies."
+        - controlId: "CC6-AI"
+          strength: indirect
+          rationale: "Access control mechanisms must function reliably."
+      owasp_llm_top10:
+        - controlId: "LLM01-2"
+          strength: indirect
+          rationale: "Prompt protection mechanism failures enable system prompt extraction."
+      nist_ai_rmf:
+        - controlId: "MG-2.1"
+          strength: direct
+          rationale: "Response plans must address protection mechanism failures."
+        - controlId: "MS-1.1"
+          strength: indirect
+          rationale: "Protection mechanism effectiveness is a trustworthiness metric."
+      iso_42001:
+        - controlId: "9.1"
+          strength: indirect
+          rationale: "Monitoring must evaluate effectiveness of protection mechanisms."
+      insurance_attestation:
+        - controlId: "INS-5"
+          strength: direct
+          rationale: "Incident response must cover protection mechanism failures."
+
+  CWE-732:
+    name: "Incorrect Permission Assignment for Critical Resource"
+    owasp_top10: "A01:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "Permissions on critical resources must be correctly assigned."
+        - controlId: "C1-AI"
+          strength: indirect
+          rationale: "Incorrect permissions can expose confidential AI data."
+      owasp_llm_top10:
+        - controlId: "LLM06-1"
+          strength: direct
+          rationale: "Incorrect permissions on agent resources enable excessive agency."
+        - controlId: "LLM03-MCP7"
+          strength: direct
+          rationale: "MCP tool permissions must follow least privilege."
+        - controlId: "LLM08-1"
+          strength: indirect
+          rationale: "Incorrect vector store permissions enable unauthorised access."
+      nist_ai_rmf:
+        - controlId: "GV-3.1"
+          strength: indirect
+          rationale: "Permission assignment for AI resources must be governed."
+
+  # ──────────────────────────────────────────────────────────────────────
+  # Additional High-Frequency CWEs (40-53)
+  # ──────────────────────────────────────────────────────────────────────
+
+  CWE-119:
+    name: "Improper Restriction of Operations within the Bounds of a Memory Buffer"
+    owasp_top10: "A06:2021"
+    frameworks:
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: direct
+          rationale: "Buffer overflows are critical foreseeable risks to system safety."
+        - controlId: "9.6"
+          strength: indirect
+          rationale: "Testing must cover memory safety boundary conditions."
+      soc2_ai:
+        - controlId: "A1-AI"
+          strength: indirect
+          rationale: "Buffer overflows can crash systems, affecting availability."
+        - controlId: "PI1-AI"
+          strength: indirect
+          rationale: "Memory corruption compromises processing integrity."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: indirect
+          rationale: "Memory safety vulnerabilities are identifiable system risks."
+      owasp_llm_top10:
+        - controlId: "LLM03-3"
+          strength: indirect
+          rationale: "Native dependencies must be checked for buffer overflow CVEs."
+
+  CWE-125:
+    name: "Out-of-bounds Read"
+    owasp_top10: "A06:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "C1-AI"
+          strength: indirect
+          rationale: "Out-of-bounds reads can expose confidential data from adjacent memory."
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: indirect
+          rationale: "Memory read vulnerabilities are foreseeable risks in native components."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: indirect
+          rationale: "Out-of-bounds read vulnerabilities must be identified as system risks."
+      owasp_llm_top10:
+        - controlId: "LLM03-3"
+          strength: indirect
+          rationale: "Native library CVEs including out-of-bounds reads must be tracked."
+
+  CWE-190:
+    name: "Integer Overflow or Wraparound"
+    owasp_top10: "A06:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "PI1-AI"
+          strength: direct
+          rationale: "Integer overflow corrupts computation accuracy and processing integrity."
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: indirect
+          rationale: "Integer overflow in AI computations is a foreseeable risk."
+        - controlId: "9.6"
+          strength: indirect
+          rationale: "Testing must cover integer boundary conditions."
+      nist_ai_rmf:
+        - controlId: "MS-1.1"
+          strength: indirect
+          rationale: "Numerical correctness is a measurable trustworthiness metric."
+      owasp_llm_top10:
+        - controlId: "LLM10-3"
+          strength: indirect
+          rationale: "Integer overflows in resource quota logic can bypass consumption limits."
+
+  CWE-256:
+    name: "Plaintext Storage of a Password"
+    owasp_top10: "A04:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "Plaintext passwords undermine authentication controls."
+        - controlId: "C1-AI"
+          strength: direct
+          rationale: "Passwords must be protected, not stored in cleartext."
+      owasp_llm_top10:
+        - controlId: "LLM03-MCP3"
+          strength: direct
+          rationale: "MCP servers must not store passwords in plaintext."
+      nist_ai_rmf:
+        - controlId: "GV-3.1"
+          strength: indirect
+          rationale: "Password storage policies must be documented in governance."
+      insurance_attestation:
+        - controlId: "INS-4"
+          strength: indirect
+          rationale: "Credential policies must prohibit plaintext password storage."
+
+  CWE-295:
+    name: "Improper Certificate Validation"
+    owasp_top10: "A07:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "C1-AI"
+          strength: direct
+          rationale: "Invalid certificate acceptance enables man-in-the-middle attacks."
+      owasp_llm_top10:
+        - controlId: "LLM03-MCP8"
+          strength: direct
+          rationale: "MCP TLS connections require proper certificate validation."
+        - controlId: "LLM03-1"
+          strength: indirect
+          rationale: "Certificate validation is essential for model provenance verification."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: indirect
+          rationale: "Certificate validation failures are identifiable communication risks."
+
+  CWE-330:
+    name: "Use of Insufficiently Random Values"
+    owasp_top10: "A02:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: indirect
+          rationale: "Weak randomness undermines cryptographic access controls."
+        - controlId: "C1-AI"
+          strength: indirect
+          rationale: "Predictable values weaken encryption protecting confidential data."
+      owasp_llm_top10:
+        - controlId: "LLM03-MCP1"
+          strength: indirect
+          rationale: "Weak randomness in token generation undermines MCP authentication."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: indirect
+          rationale: "Insufficient randomness is a systematic cryptographic risk."
+
+  CWE-345:
+    name: "Insufficient Verification of Data Authenticity"
+    owasp_top10: "A08:2021"
+    frameworks:
+      owasp_llm_top10:
+        - controlId: "LLM03-1"
+          strength: direct
+          rationale: "Model provenance requires hash verification and integrity checks."
+        - controlId: "LLM04-1"
+          strength: direct
+          rationale: "Training data must have integrity verification to detect poisoning."
+      soc2_ai:
+        - controlId: "PI1-AI"
+          strength: direct
+          rationale: "Data authenticity verification is required for processing integrity."
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: indirect
+          rationale: "Unverified data can introduce foreseeable risks to system behaviour."
+      nist_ai_rmf:
+        - controlId: "MS-3.1"
+          strength: indirect
+          rationale: "Third-party data authenticity must be verified throughout lifecycle."
+
+  CWE-362:
+    name: "Concurrent Execution Using Shared Resource with Improper Synchronization (Race Condition)"
+    owasp_top10: "A04:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "PI1-AI"
+          strength: direct
+          rationale: "Race conditions compromise processing integrity and data accuracy."
+        - controlId: "A1-AI"
+          strength: indirect
+          rationale: "Race conditions can cause system crashes affecting availability."
+      eu_ai_act:
+        - controlId: "9.6"
+          strength: indirect
+          rationale: "Concurrency testing must cover race condition scenarios."
+      nist_ai_rmf:
+        - controlId: "MS-1.1"
+          strength: indirect
+          rationale: "Concurrency correctness is a measurable trustworthiness metric."
+
+  CWE-384:
+    name: "Session Fixation"
+    owasp_top10: "A07:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "Session fixation attacks bypass authentication controls."
+      owasp_llm_top10:
+        - controlId: "LLM03-MCP1"
+          strength: indirect
+          rationale: "MCP session management must prevent fixation attacks."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: indirect
+          rationale: "Session fixation is an identifiable authentication risk."
+
+  CWE-426:
+    name: "Untrusted Search Path"
+    owasp_top10: "A08:2021"
+    frameworks:
+      owasp_llm_top10:
+        - controlId: "LLM03-1"
+          strength: indirect
+          rationale: "Untrusted search paths can load malicious model or library artefacts."
+        - controlId: "LLM03-3"
+          strength: indirect
+          rationale: "Dependency resolution must use trusted paths and verified registries."
+      soc2_ai:
+        - controlId: "CC8-AI"
+          strength: indirect
+          rationale: "Software configuration must control search paths for dependencies."
+      nist_ai_rmf:
+        - controlId: "MP-4.1"
+          strength: indirect
+          rationale: "Search path dependencies must be characterised for AI components."
+
+  CWE-476:
+    name: "NULL Pointer Dereference"
+    owasp_top10: "A06:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "A1-AI"
+          strength: direct
+          rationale: "NULL pointer crashes directly affect system availability."
+      eu_ai_act:
+        - controlId: "9.6"
+          strength: indirect
+          rationale: "Testing must cover null input scenarios to ensure system robustness."
+      nist_ai_rmf:
+        - controlId: "MS-1.1"
+          strength: indirect
+          rationale: "Crash-free operation is a measurable trustworthiness metric."
+
+  CWE-521:
+    name: "Weak Password Requirements"
+    owasp_top10: "A07:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "Weak passwords undermine access control effectiveness."
+      owasp_llm_top10:
+        - controlId: "LLM03-MCP1"
+          strength: indirect
+          rationale: "MCP authentication must enforce adequate credential strength."
+      nist_ai_rmf:
+        - controlId: "GV-3.1"
+          strength: indirect
+          rationale: "Password policies must be part of documented access governance."
+      insurance_attestation:
+        - controlId: "INS-3"
+          strength: indirect
+          rationale: "AI governance framework must include password policy requirements."
+
+  CWE-548:
+    name: "Exposure of Information Through Directory Listing"
+    owasp_top10: "A01:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "C1-AI"
+          strength: indirect
+          rationale: "Directory listings can expose confidential file structures."
+        - controlId: "CC6-AI"
+          strength: indirect
+          rationale: "Directory listing bypasses intended access restrictions."
+      owasp_llm_top10:
+        - controlId: "LLM02-1"
+          strength: indirect
+          rationale: "Directory listings can reveal sensitive LLM model file locations."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: indirect
+          rationale: "Information exposure through directory listing is an identifiable risk."
+
+  CWE-668:
+    name: "Exposure of Resource to Wrong Sphere"
+    owasp_top10: "A01:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "Resources must only be accessible within their intended sphere."
+        - controlId: "C1-AI"
+          strength: direct
+          rationale: "Data exposed to the wrong sphere violates confidentiality."
+      owasp_llm_top10:
+        - controlId: "LLM02-1"
+          strength: indirect
+          rationale: "LLM training data exposed to unintended contexts creates disclosure risk."
+        - controlId: "LLM08-2"
+          strength: indirect
+          rationale: "RAG pipeline data must respect access control boundaries."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: indirect
+          rationale: "Cross-sphere resource exposure is a systematic risk."
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: indirect
+          rationale: "Unintended data exposure is a foreseeable risk to fundamental rights."
+
+  CWE-706:
+    name: "Use of Incorrectly-Resolved Name or Reference"
+    owasp_top10: "A08:2021"
+    frameworks:
+      owasp_llm_top10:
+        - controlId: "LLM03-1"
+          strength: indirect
+          rationale: "Incorrect name resolution can load wrong model versions from registries."
+        - controlId: "LLM04-1"
+          strength: indirect
+          rationale: "Name resolution attacks can redirect to poisoned data sources."
+      soc2_ai:
+        - controlId: "PI1-AI"
+          strength: indirect
+          rationale: "Incorrect references can cause processing of wrong data."
+      nist_ai_rmf:
+        - controlId: "MP-4.1"
+          strength: indirect
+          rationale: "Name resolution dependencies between system components must be characterised."
+
+  CWE-754:
+    name: "Improper Check for Unusual or Exceptional Conditions"
+    owasp_top10: "A06:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "A1-AI"
+          strength: indirect
+          rationale: "Unhandled exceptions can cause system crashes affecting availability."
+        - controlId: "PI1-AI"
+          strength: indirect
+          rationale: "Exceptional conditions must be handled to maintain processing integrity."
+      eu_ai_act:
+        - controlId: "9.6"
+          strength: indirect
+          rationale: "Testing must cover unusual and exceptional input conditions."
+      nist_ai_rmf:
+        - controlId: "MS-1.1"
+          strength: indirect
+          rationale: "Exception handling robustness is a measurable trustworthiness metric."
+      owasp_llm_top10:
+        - controlId: "LLM05-2"
+          strength: indirect
+          rationale: "LLM failure modes including unusual outputs require proper handling."
+
+  CWE-770:
+    name: "Allocation of Resources Without Limits or Throttling"
+    owasp_top10: "A05:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "A1-AI"
+          strength: direct
+          rationale: "Unbounded resource allocation directly threatens system availability."
+      owasp_llm_top10:
+        - controlId: "LLM10-1"
+          strength: direct
+          rationale: "Token and API consumption must have bounded limits."
+        - controlId: "LLM10-3"
+          strength: direct
+          rationale: "Resource quotas must enforce maximum concurrent requests and sizes."
+        - controlId: "LLM06-3"
+          strength: direct
+          rationale: "Agent consumption must be constrained by rate limits."
+        - controlId: "LLM03-MCP5"
+          strength: direct
+          rationale: "MCP endpoints require rate limiting to prevent unbounded consumption."
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: indirect
+          rationale: "Unbounded allocation is a foreseeable risk to system availability."
+      nist_ai_rmf:
+        - controlId: "MG-2.1"
+          strength: indirect
+          rationale: "Resource exhaustion scenarios require documented response plans."
+
+  CWE-787:
+    name: "Out-of-bounds Write"
+    owasp_top10: "A06:2021"
+    frameworks:
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: direct
+          rationale: "Out-of-bounds write is a critical safety risk enabling code execution."
+      soc2_ai:
+        - controlId: "PI1-AI"
+          strength: direct
+          rationale: "Memory corruption from out-of-bounds writes destroys processing integrity."
+        - controlId: "A1-AI"
+          strength: indirect
+          rationale: "Out-of-bounds writes can crash systems affecting availability."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: indirect
+          rationale: "Memory safety vulnerabilities are systematic risks in native components."
+      owasp_llm_top10:
+        - controlId: "LLM03-3"
+          strength: indirect
+          rationale: "Native library CVEs including memory corruption must be tracked."
+
+  CWE-829:
+    name: "Inclusion of Functionality from Untrusted Control Sphere"
+    owasp_top10: "A08:2021"
+    frameworks:
+      owasp_llm_top10:
+        - controlId: "LLM03-1"
+          strength: direct
+          rationale: "AI component provenance must be verified before inclusion."
+        - controlId: "LLM03-3"
+          strength: direct
+          rationale: "Untrusted dependencies must be checked against vulnerability databases."
+        - controlId: "LLM03-5"
+          strength: indirect
+          rationale: "All included components must be inventoried with source tracking."
+      soc2_ai:
+        - controlId: "CC8-AI"
+          strength: direct
+          rationale: "Third-party functionality inclusion must go through change management."
+      nist_ai_rmf:
+        - controlId: "MS-3.1"
+          strength: direct
+          rationale: "Third-party component risks must be tracked throughout lifecycle."
+        - controlId: "MP-4.1"
+          strength: indirect
+          rationale: "External component dependencies must be characterised."
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: indirect
+          rationale: "Untrusted functionality inclusion is a foreseeable supply chain risk."
+
+  CWE-915:
+    name: "Improperly Controlled Modification of Dynamically-Determined Object Attributes"
+    owasp_top10: "A08:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "PI1-AI"
+          strength: direct
+          rationale: "Mass assignment can corrupt data processing integrity."
+      owasp_llm_top10:
+        - controlId: "LLM03-MCP2"
+          strength: indirect
+          rationale: "MCP tool inputs must be validated against schemas to prevent mass assignment."
+        - controlId: "LLM05-1"
+          strength: indirect
+          rationale: "LLM outputs used to set object attributes must be validated."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: indirect
+          rationale: "Object attribute manipulation is an identifiable data integrity risk."
+
+  CWE-942:
+    name: "Permissive Cross-domain Policy with Untrusted Domains"
+    owasp_top10: "A05:2021"
+    frameworks:
+      soc2_ai:
+        - controlId: "CC6-AI"
+          strength: direct
+          rationale: "Cross-domain policies must restrict access to trusted origins only."
+        - controlId: "C1-AI"
+          strength: indirect
+          rationale: "Permissive CORS enables cross-origin access to confidential data."
+      owasp_llm_top10:
+        - controlId: "LLM03-MCP8"
+          strength: indirect
+          rationale: "MCP server CORS configuration must restrict untrusted origins."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: indirect
+          rationale: "Permissive cross-domain policies are identifiable access risks."
+
+  # ──────────────────────────────────────────────────────────────────────
+  # AI/ML-Specific CWEs
+  # ──────────────────────────────────────────────────────────────────────
+
+  CWE-1039:
+    name: "Automated Recognition Mechanism with Inadequate Detection or Handling of Adversarial Input Perturbation"
+    frameworks:
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: direct
+          rationale: "Adversarial robustness is a foreseeable AI safety risk."
+        - controlId: "9.6"
+          strength: direct
+          rationale: "Testing must include adversarial input perturbation scenarios."
+      nist_ai_rmf:
+        - controlId: "MP-2.1"
+          strength: direct
+          rationale: "Adversarial manipulation is a systematic risk requiring identification."
+        - controlId: "MS-1.1"
+          strength: direct
+          rationale: "Adversarial robustness is a core trustworthiness metric."
+      iso_42001:
+        - controlId: "6.1"
+          strength: direct
+          rationale: "Adversarial risks must be addressed in AI management planning."
+        - controlId: "A.6.2"
+          strength: indirect
+          rationale: "Impact assessment must consider adversarial input scenarios."
+      owasp_llm_top10:
+        - controlId: "LLM01-1"
+          strength: direct
+          rationale: "Prompt injection is a form of adversarial input perturbation."
+        - controlId: "LLM04-2"
+          strength: indirect
+          rationale: "Adversarial inputs to embedding pipelines must be detected."
+      colorado_sb_24_205:
+        - controlId: "CO205-1"
+          strength: indirect
+          rationale: "Impact assessments must consider adversarial manipulation risks."
+        - controlId: "CO205-3"
+          strength: indirect
+          rationale: "Developers must disclose adversarial robustness limitations."
+
+  CWE-1040:
+    name: "Quality Issues in Machine Learning Model"
+    frameworks:
+      eu_ai_act:
+        - controlId: "9.6"
+          strength: direct
+          rationale: "Testing must verify model quality meets intended purpose."
+        - controlId: "11.1"
+          strength: indirect
+          rationale: "Technical documentation must cover model quality characteristics."
+      nist_ai_rmf:
+        - controlId: "MS-1.1"
+          strength: direct
+          rationale: "Model quality metrics must be identified and applied."
+        - controlId: "MS-2.3"
+          strength: direct
+          rationale: "Model performance must be demonstrated for deployment conditions."
+      iso_42001:
+        - controlId: "6.2"
+          strength: indirect
+          rationale: "AI objectives must include model quality targets."
+        - controlId: "9.1"
+          strength: direct
+          rationale: "Model quality must be monitored and measured."
+      soc2_ai:
+        - controlId: "PI1-AI"
+          strength: direct
+          rationale: "Processing integrity requires quality-controlled models."
+      california_ab_2013:
+        - controlId: "AB2013-1"
+          strength: indirect
+          rationale: "Training data quality documentation supports transparency."
+      colorado_sb_24_205:
+        - controlId: "CO205-1"
+          strength: indirect
+          rationale: "Impact assessments must evaluate model quality risks."
+      insurance_attestation:
+        - controlId: "INS-1"
+          strength: indirect
+          rationale: "Model quality risks must be tracked in the risk register."
+
+  CWE-1041:
+    name: "Use of Redundant Code"
+    frameworks:
+      soc2_ai:
+        - controlId: "CC8-AI"
+          strength: indirect
+          rationale: "Redundant code indicates insufficient change management discipline."
+      iso_42001:
+        - controlId: "10.1"
+          strength: indirect
+          rationale: "Code redundancy elimination is part of continual improvement."
+      nist_ai_rmf:
+        - controlId: "GV-3.1"
+          strength: contributing
+          rationale: "Code quality governance reduces risk of inconsistent behaviour."
+
+  CWE-1395:
+    name: "Dependency on Vulnerable Third-Party Component"
+    owasp_top10: "A06:2021"
+    frameworks:
+      owasp_llm_top10:
+        - controlId: "LLM03-3"
+          strength: direct
+          rationale: "AI dependencies must be checked against vulnerability databases."
+        - controlId: "LLM03-4"
+          strength: direct
+          rationale: "Vulnerable dependency versions must be pinned and upgraded."
+        - controlId: "LLM03-5"
+          strength: direct
+          rationale: "Vulnerability status of all AI dependencies must be inventoried."
+        - controlId: "LLM03-1"
+          strength: indirect
+          rationale: "Vulnerable dependencies compromise supply chain integrity."
+      soc2_ai:
+        - controlId: "CC8-AI"
+          strength: direct
+          rationale: "Vulnerable components must be identified and remediated via change management."
+        - controlId: "CC7-AI"
+          strength: indirect
+          rationale: "Monitoring must detect exploitation of known vulnerabilities."
+      eu_ai_act:
+        - controlId: "9.2a"
+          strength: direct
+          rationale: "Known-vulnerable dependencies are foreseeable and identifiable risks."
+      nist_ai_rmf:
+        - controlId: "MS-3.1"
+          strength: direct
+          rationale: "Third-party component vulnerabilities must be tracked throughout lifecycle."
+        - controlId: "MP-4.1"
+          strength: indirect
+          rationale: "Vulnerable component dependencies must be characterised."
+        - controlId: "MG-3.1"
+          strength: indirect
+          rationale: "Known vulnerabilities must be prioritised and treated."
+      iso_42001:
+        - controlId: "6.1"
+          strength: indirect
+          rationale: "Vulnerable dependencies are risks to the AI management system."
+      insurance_attestation:
+        - controlId: "INS-1"
+          strength: direct
+          rationale: "Vulnerable dependency risks must be tracked in the risk register."
+        - controlId: "INS-4"
+          strength: indirect
+          rationale: "Policies must address vulnerable dependency remediation."
+      owasp_agentic_top10:
+        - controlId: "ASI04-1"
+          strength: direct
+          rationale: "Vulnerable runtime dependencies are a direct agentic supply chain risk."
+
+  # ── OWASP Agentic Top 10 CWE Mappings ──────────────────────────────
+  # First-to-market: no official OWASP CWE mappings exist for ASI items.
+  # These are curated mappings based on the risk descriptions.
+
+  CWE-74:
+    name: "Improper Neutralization of Special Elements in Output (Injection)"
+    owasp_top10: "A03:2021"
+    frameworks:
+      owasp_agentic_top10:
+        - controlId: "ASI01-1"
+          strength: direct
+          rationale: "Goal hijack via instruction injection exploits improper input neutralization."
+        - controlId: "ASI01-2"
+          strength: direct
+          rationale: "Hidden instructions in external content are injection attacks on agent context."
+
+  CWE-749:
+    name: "Exposed Dangerous Method or Function"
+    owasp_top10: ""
+    frameworks:
+      owasp_agentic_top10:
+        - controlId: "ASI02-1"
+          strength: direct
+          rationale: "Over-privileged tool access exposes dangerous methods to agent misuse."
+        - controlId: "ASI02-3"
+          strength: direct
+          rationale: "Unsandboxed side effects from tool calls are exposed dangerous functions."
+
+  CWE-269:
+    name: "Improper Privilege Management"
+    owasp_top10: ""
+    frameworks:
+      owasp_agentic_top10:
+        - controlId: "ASI03-1"
+          strength: direct
+          rationale: "Agents inheriting human credentials is improper privilege management."
+        - controlId: "ASI03-2"
+          strength: direct
+          rationale: "Cross-agent trust without mutual auth enables privilege abuse."
+        - controlId: "ASI03-3"
+          strength: direct
+          rationale: "Missing RBAC boundaries enable lateral movement across agent trust domains."
+
+  CWE-494:
+    name: "Download of Code Without Integrity Check"
+    owasp_top10: ""
+    frameworks:
+      owasp_agentic_top10:
+        - controlId: "ASI04-2"
+          strength: direct
+          rationale: "Dynamically loaded plugins without signed manifests lack integrity checks."
+        - controlId: "ASI04-3"
+          strength: direct
+          rationale: "Registry poisoning exploits missing integrity verification on downloads."
+
+  CWE-94:
+    name: "Improper Control of Generation of Code (Code Injection)"
+    owasp_top10: "A03:2021"
+    frameworks:
+      owasp_agentic_top10:
+        - controlId: "ASI05-1"
+          strength: direct
+          rationale: "Agent-generated code without sandboxing is direct code injection risk."
+        - controlId: "ASI05-2"
+          strength: direct
+          rationale: "Unrestricted eval/exec enables code injection through natural language."
+
+  CWE-345:
+    name: "Insufficient Verification of Data Authenticity"
+    owasp_top10: ""
+    frameworks:
+      owasp_agentic_top10:
+        - controlId: "ASI06-1"
+          strength: direct
+          rationale: "Memory poisoning exploits insufficient data authenticity verification."
+        - controlId: "ASI06-2"
+          strength: direct
+          rationale: "Content provenance validation prevents injection into memory stores."
+
+  CWE-319:
+    name: "Cleartext Transmission of Sensitive Information"
+    owasp_top10: "A02:2021"
+    frameworks:
+      owasp_agentic_top10:
+        - controlId: "ASI07-1"
+          strength: direct
+          rationale: "Unencrypted inter-agent channels transmit sensitive data in cleartext."
+        - controlId: "ASI07-2"
+          strength: direct
+          rationale: "Unsigned payloads enable message interception and spoofing."
+
+  CWE-636:
+    name: "Not Failing Securely (Failing Open)"
+    owasp_top10: ""
+    frameworks:
+      owasp_agentic_top10:
+        - controlId: "ASI08-1"
+          strength: direct
+          rationale: "Missing circuit breakers cause cascading failures across agent chains."
+        - controlId: "ASI08-2"
+          strength: direct
+          rationale: "Agents that fail open rather than gracefully degrade propagate errors."
+
+  CWE-451:
+    name: "User Interface (UI) Misrepresentation of Critical Information"
+    owasp_top10: ""
+    frameworks:
+      owasp_agentic_top10:
+        - controlId: "ASI09-1"
+          strength: direct
+          rationale: "Agents acting without human confirmation exploit authority bias."
+        - controlId: "ASI09-2"
+          strength: direct
+          rationale: "Unmarked AI-generated content misrepresents information source."
+
+  CWE-693:
+    name: "Protection Mechanism Failure"
+    owasp_top10: ""
+    frameworks:
+      owasp_agentic_top10:
+        - controlId: "ASI10-1"
+          strength: direct
+          rationale: "Missing kill switches and resource limits are protection mechanism failures."
+        - controlId: "ASI10-2"
+          strength: direct
+          rationale: "Goal drift without behavioural monitoring bypasses containment mechanisms."
+        - controlId: "ASI10-3"
+          strength: direct
+          rationale: "Agent collusion exploits insufficient cross-agent oversight mechanisms."

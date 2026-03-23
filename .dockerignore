@@ -1,0 +1,15 @@
+dist/
+build/
+*.egg-info/
+__pycache__/
+*.pyc
+.pytest_cache/
+.git/
+*.db
+*.db-shm
+*.db-wal
+research/
+prescans/
+tests/
+*.md
+LICENSE

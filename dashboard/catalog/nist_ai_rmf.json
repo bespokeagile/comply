@@ -1,0 +1,401 @@
+{
+  "framework": "nist_ai_rmf",
+  "version": "1.0.0",
+  "scans": [
+    {
+      "id": "catalog-bespoketracker-nist_ai_rmf-structure",
+      "url": "https://github.com/atdash/BespokeTracker",
+      "repoSlug": "bespoketracker",
+      "repoName": "BespokeTracker",
+      "framework": "nist_ai_rmf",
+      "score": 95.8,
+      "depth": "structure",
+      "timestamp": "2026-03-06T13:41:59.069171+00:00",
+      "source": "demo",
+      "report": {
+        "reportType": "comply_scan",
+        "scanId": "a2947c4d4502",
+        "generatedAt": "2026-03-06T13:41:59.069171+00:00",
+        "target": "https://github.com/atdash/BespokeTracker",
+        "repoPath": "/var/folders/_k/jk8_8f9x2jncryy9yg7z3mgw0000gn/T/comply-xbj9sfld/repo",
+        "framework": "nist_ai_rmf",
+        "scanDepth": "structure",
+        "commitSha": "c9bf5f7f300ef0ecc8ea0a2c596b610e35f835cb",
+        "summary": {
+          "met": 11,
+          "partial": 1,
+          "gap": 0,
+          "total": 12,
+          "score": 95.8
+        },
+        "articles": [
+          {
+            "articleId": "govern",
+            "label": "GOVERN \u2014 Culture, Policies and Accountability",
+            "met": 3,
+            "partial": 0,
+            "gap": 0,
+            "controls": [
+              {
+                "controlId": "GV-1.1",
+                "status": "met",
+                "requirement": "Legal and regulatory requirements involving AI are understood, managed, and documented.",
+                "recommendation": "",
+                "evidence": [
+                  "29 governance/policy file(s)",
+                  "35 configuration files"
+                ],
+                "gaps": [],
+                "evidence_fn": "evidence_governance_policy"
+              },
+              {
+                "controlId": "GV-1.2",
+                "status": "met",
+                "requirement": "Mechanisms are in place to define, assess, and communicate risk tolerances for AI systems.",
+                "recommendation": "Document formal risk assessment procedures",
+                "evidence": [
+                  "18 file(s) addressing risk management",
+                  "Risk-related features: Forecasting Risk"
+                ],
+                "gaps": [],
+                "evidence_fn": "evidence_risk_categorization"
+              },
+              {
+                "controlId": "GV-3.1",
+                "status": "met",
+                "requirement": "Decision-making about AI system development, deployment, and monitoring is documented and subject to governance.",
+                "recommendation": "",
+                "evidence": [
+                  "17 change management file(s)",
+                  "4 versioning file(s)"
+                ],
+                "gaps": [],
+                "evidence_fn": "evidence_change_management"
+              }
+            ]
+          },
+          {
+            "articleId": "map",
+            "label": "MAP \u2014 Context, Risk Identification and Framing",
+            "met": 2,
+            "partial": 0,
+            "gap": 0,
+            "controls": [
+              {
+                "controlId": "MP-2.1",
+                "status": "met",
+                "requirement": "Potential risks of the AI system, including risks to individuals, groups, communities, organisations, and society, are identified in a systematic manner.",
+                "recommendation": "Document formal risk assessment procedures",
+                "evidence": [
+                  "18 file(s) addressing risk management",
+                  "Risk-related features: Forecasting Risk"
+                ],
+                "gaps": [],
+                "evidence_fn": "evidence_risk_categorization"
+              },
+              {
+                "controlId": "MP-4.1",
+                "status": "met",
+                "requirement": "Dependencies and interdependencies between AI system components and external systems are characterised.",
+                "recommendation": "",
+                "evidence": [
+                  "6 documentation/transparency files",
+                  "README present with project documentation"
+                ],
+                "gaps": [],
+                "evidence_fn": "evidence_ai_system_inventory"
+              }
+            ]
+          },
+          {
+            "articleId": "measure",
+            "label": "MEASURE \u2014 Analysis, Assessment, Monitoring",
+            "met": 4,
+            "partial": 0,
+            "gap": 0,
+            "controls": [
+              {
+                "controlId": "MS-1.1",
+                "status": "met",
+                "requirement": "Appropriate methods and metrics are identified and applied to evaluate AI system trustworthiness.",
+                "recommendation": "",
+                "evidence": [
+                  "17 test files with 111 test cases",
+                  "Test frameworks: pytest"
+                ],
+                "gaps": [],
+                "evidence_fn": "evidence_performance_measurement"
+              },
+              {
+                "controlId": "MS-2.1",
+                "status": "met",
+                "requirement": "Evaluations involving human subjects adhere to the organisation's policies and comply with applicable law.",
+                "recommendation": "",
+                "evidence": [
+                  "31 monitoring/observability files",
+                  "Functions: check_multi_remediation_conflict, health, health, check_reoptimization_trigger, check_evm_alerts"
+                ],
+                "gaps": [],
+                "evidence_fn": "evidence_continuous_monitoring"
+              },
+              {
+                "controlId": "MS-2.3",
+                "status": "met",
+                "requirement": "AI system performance or assurance criteria are measured qualitatively or quantitatively and demonstrated for conditions similar to deployment.",
+                "recommendation": "",
+                "evidence": [
+                  "34 files with logging/audit functionality",
+                  "Logging frameworks detected: logging",
+                  "Functions: record_test_execution, log_call, log_denial, evidence_audit_trail, record_user_adjustment"
+                ],
+                "gaps": [],
+                "evidence_fn": "evidence_retention_compliance"
+              },
+              {
+                "controlId": "MS-3.1",
+                "status": "met",
+                "requirement": "AI risks and benefits from third-party entities are tracked and managed throughout the lifecycle.",
+                "recommendation": "",
+                "evidence": [
+                  "17 test files with 111 test cases",
+                  "Test frameworks: pytest"
+                ],
+                "gaps": [],
+                "evidence_fn": "evidence_performance_measurement"
+              }
+            ]
+          },
+          {
+            "articleId": "manage",
+            "label": "MANAGE \u2014 Response, Recovery, Communication",
+            "met": 2,
+            "partial": 1,
+            "gap": 0,
+            "controls": [
+              {
+                "controlId": "MG-2.1",
+                "status": "partial",
+                "requirement": "Response plans for identified or emergent AI risks are documented, implemented, and regularly tested.",
+                "recommendation": "Document formal incident response procedures for AI system failures",
+                "evidence": [
+                  "7 incident-related file(s)"
+                ],
+                "gaps": [
+                  "Formal incident response plan may not be documented"
+                ],
+                "evidence_fn": "evidence_incident_response"
+              },
+              {
+                "controlId": "MG-3.1",
+                "status": "met",
+                "requirement": "Identified AI risks are prioritised and treated in a manner that is consistent with the organisation's risk management approach.",
+                "recommendation": "Document formal risk assessment procedures",
+                "evidence": [
+                  "18 file(s) addressing risk management",
+                  "Risk-related features: Forecasting Risk"
+                ],
+                "gaps": [],
+                "evidence_fn": "evidence_risk_register_auto"
+              },
+              {
+                "controlId": "MG-4.1",
+                "status": "met",
+                "requirement": "Post-deployment monitoring of AI system performance and residual risk is conducted and documented.",
+                "recommendation": "Document formal risk assessment procedures",
+                "evidence": [
+                  "18 file(s) addressing risk management",
+                  "Risk-related features: Forecasting Risk"
+                ],
+                "gaps": [],
+                "evidence_fn": "evidence_risk_assessment_gateway"
+              }
+            ]
+          }
+        ],
+        "model": {
+          "filesScanned": 500,
+          "featuresDiscovered": 316,
+          "completenessScore": 0,
+          "codebaseGraph": {
+            "files": [
+              {
+                "path": "src/app.py",
+                "language": "python",
+                "imports": [
+                  "fastapi",
+                  "logging",
+                  "pydantic"
+                ],
+                "functions": [
+                  "main",
+                  "setup"
+                ],
+                "classes": [
+                  "App"
+                ]
+              },
+              {
+                "path": "src/models.py",
+                "language": "python",
+                "imports": [
+                  "pydantic",
+                  "typing"
+                ],
+                "functions": [
+                  "validate"
+                ],
+                "classes": [
+                  "UserModel",
+                  "Config"
+                ]
+              },
+              {
+                "path": "src/api/routes.py",
+                "language": "python",
+                "imports": [
+                  "fastapi",
+                  "logging"
+                ],
+                "functions": [
+                  "get_items",
+                  "create_item"
+                ],
+                "classes": [
+                  "Router"
+                ]
+              },
+              {
+                "path": "src/utils/logger.py",
+                "language": "python",
+                "imports": [
+                  "logging",
+                  "structlog"
+                ],
+                "functions": [
+                  "setup_logging",
+                  "log_event"
+                ],
+                "classes": []
+              },
+              {
+                "path": "src/auth.py",
+                "language": "python",
+                "imports": [
+                  "jwt",
+                  "passlib"
+                ],
+                "functions": [
+                  "authenticate",
+                  "authorize",
+                  "verify_token"
+                ],
+                "classes": [
+                  "AuthMiddleware"
+                ]
+              },
+              {
+                "path": "tests/test_api.py",
+                "language": "python",
+                "imports": [
+                  "pytest",
+                  "httpx"
+                ],
+                "functions": [
+                  "test_create",
+                  "test_validate"
+                ],
+                "classes": []
+              },
+              {
+                "path": "docs/README.md",
+                "language": "markdown",
+                "imports": [],
+                "functions": [],
+                "classes": []
+              },
+              {
+                "path": "config/settings.yaml",
+                "language": "yaml",
+                "imports": [],
+                "functions": [],
+                "classes": []
+              },
+              {
+                "path": "src/monitoring.py",
+                "language": "python",
+                "imports": [
+                  "prometheus_client",
+                  "logging"
+                ],
+                "functions": [
+                  "track_metrics",
+                  "health_check"
+                ],
+                "classes": [
+                  "Monitor"
+                ]
+              },
+              {
+                "path": "src/data/handler.py",
+                "language": "python",
+                "imports": [
+                  "pandas",
+                  "sqlalchemy"
+                ],
+                "functions": [
+                  "process_data",
+                  "store_results"
+                ],
+                "classes": [
+                  "DataHandler"
+                ]
+              }
+            ],
+            "relationships": [
+              {
+                "source": "src/api/routes.py",
+                "target": "src/models.py",
+                "type": "imports"
+              },
+              {
+                "source": "src/api/routes.py",
+                "target": "src/auth.py",
+                "type": "imports"
+              },
+              {
+                "source": "src/app.py",
+                "target": "src/api/routes.py",
+                "type": "imports"
+              }
+            ],
+            "dependencies": [
+              "fastapi",
+              "pydantic",
+              "structlog",
+              "pytest",
+              "prometheus-client"
+            ]
+          }
+        },
+        "remediations": [
+          {
+            "controlId": "MG-2.1",
+            "articleId": "manage",
+            "current_status": "partial",
+            "level": 3,
+            "evidence_fn": "evidence_incident_response",
+            "summary": "No existing docs/incident-response-plan.md found. docs/incident-response-plan.md needed.",
+            "action": "Expand incident response to cover AI-specific failure modes.",
+            "relatedFiles": [],
+            "missingConnection": "",
+            "effort": "low",
+            "impact": 1,
+            "score_delta": 4.2,
+            "projected_score_after": 100.0,
+            "priority_score": 4.2
+          }
+        ]
+      }
+    }
+  ]
+}

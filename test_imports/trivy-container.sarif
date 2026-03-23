@@ -1,0 +1,50 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Trivy",
+          "version": "0.49.1",
+          "rules": [
+            {"id": "CVE-2024-3094", "shortDescription": {"text": "xz-utils backdoor"}, "properties": {"tags": ["CWE-506"]}},
+            {"id": "CVE-2023-44487", "shortDescription": {"text": "HTTP/2 Rapid Reset"}, "properties": {"tags": ["CWE-400"]}},
+            {"id": "CVE-2024-21626", "shortDescription": {"text": "runc container escape"}, "properties": {"tags": ["CWE-668"]}},
+            {"id": "CVE-2023-47038", "shortDescription": {"text": "Perl regex buffer overflow"}, "properties": {"tags": ["CWE-120"]}}
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CVE-2024-3094",
+          "level": "error",
+          "message": {"text": "xz-utils 5.4.1-0.2 contains a supply chain backdoor allowing unauthorized SSH access. Fixed in 5.6.1+really5.4.5-1."},
+          "locations": [{"physicalLocation": {"artifactLocation": {"uri": "Dockerfile"}, "region": {"startLine": 1}}}],
+          "properties": {"cwe": ["CWE-506"], "cvss": 10.0, "severity": "CRITICAL"}
+        },
+        {
+          "ruleId": "CVE-2023-44487",
+          "level": "error",
+          "message": {"text": "golang.org/x/net 0.15.0 is vulnerable to HTTP/2 Rapid Reset denial of service. Upgrade to 0.17.0+."},
+          "locations": [{"physicalLocation": {"artifactLocation": {"uri": "go.sum"}, "region": {"startLine": 234}}}],
+          "properties": {"cwe": ["CWE-400"], "cvss": 7.5, "severity": "HIGH"}
+        },
+        {
+          "ruleId": "CVE-2024-21626",
+          "level": "error",
+          "message": {"text": "runc 1.1.9 allows container escape via leaked file descriptor. Upgrade to 1.1.12+."},
+          "locations": [{"physicalLocation": {"artifactLocation": {"uri": "Dockerfile"}, "region": {"startLine": 1}}}],
+          "properties": {"cwe": ["CWE-668"], "cvss": 8.6, "severity": "HIGH"}
+        },
+        {
+          "ruleId": "CVE-2023-47038",
+          "level": "warning",
+          "message": {"text": "perl 5.36.0 has a regex buffer overflow. Low exploitation likelihood in this context."},
+          "locations": [{"physicalLocation": {"artifactLocation": {"uri": "Dockerfile"}, "region": {"startLine": 1}}}],
+          "properties": {"cwe": ["CWE-120"], "cvss": 5.3, "severity": "MEDIUM"}
+        }
+      ]
+    }
+  ]
+}

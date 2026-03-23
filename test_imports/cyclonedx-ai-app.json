@@ -1,0 +1,180 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-03-09T10:30:00Z",
+    "tools": [{"name": "syft", "version": "0.98.0"}],
+    "component": {
+      "name": "ai-compliance-demo",
+      "version": "1.2.0",
+      "type": "application"
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "langchain",
+      "version": "0.1.16",
+      "purl": "pkg:pypi/langchain@0.1.16",
+      "licenses": [{"license": {"id": "MIT"}}],
+      "supplier": {"name": "LangChain, Inc."}
+    },
+    {
+      "type": "library",
+      "name": "openai",
+      "version": "1.12.0",
+      "purl": "pkg:pypi/openai@1.12.0",
+      "licenses": [{"license": {"id": "Apache-2.0"}}],
+      "supplier": {"name": "OpenAI"}
+    },
+    {
+      "type": "library",
+      "name": "anthropic",
+      "version": "0.18.1",
+      "purl": "pkg:pypi/anthropic@0.18.1",
+      "licenses": [{"license": {"id": "MIT"}}],
+      "supplier": {"name": "Anthropic"}
+    },
+    {
+      "type": "library",
+      "name": "transformers",
+      "version": "4.38.2",
+      "purl": "pkg:pypi/transformers@4.38.2",
+      "licenses": [{"license": {"id": "Apache-2.0"}}],
+      "supplier": {"name": "Hugging Face"}
+    },
+    {
+      "type": "library",
+      "name": "torch",
+      "version": "2.2.1",
+      "purl": "pkg:pypi/torch@2.2.1",
+      "licenses": [{"license": {"id": "BSD-3-Clause"}}],
+      "supplier": {"name": "Meta Platforms"}
+    },
+    {
+      "type": "library",
+      "name": "chromadb",
+      "version": "0.4.22",
+      "purl": "pkg:pypi/chromadb@0.4.22",
+      "licenses": [{"license": {"id": "Apache-2.0"}}],
+      "supplier": {"name": "Chroma"}
+    },
+    {
+      "type": "library",
+      "name": "tiktoken",
+      "version": "0.6.0",
+      "purl": "pkg:pypi/tiktoken@0.6.0",
+      "licenses": [{"license": {"id": "MIT"}}]
+    },
+    {
+      "type": "library",
+      "name": "fastapi",
+      "version": "0.109.2",
+      "purl": "pkg:pypi/fastapi@0.109.2",
+      "licenses": [{"license": {"id": "MIT"}}],
+      "supplier": {"name": "Sebastián Ramírez"}
+    },
+    {
+      "type": "library",
+      "name": "pydantic",
+      "version": "2.6.1",
+      "purl": "pkg:pypi/pydantic@2.6.1",
+      "licenses": [{"license": {"id": "MIT"}}]
+    },
+    {
+      "type": "library",
+      "name": "numpy",
+      "version": "1.26.4",
+      "purl": "pkg:pypi/numpy@1.26.4",
+      "licenses": [{"license": {"id": "BSD-3-Clause"}}],
+      "supplier": {"name": "NumPy Developers"}
+    },
+    {
+      "type": "library",
+      "name": "pandas",
+      "version": "2.2.0",
+      "purl": "pkg:pypi/pandas@2.2.0",
+      "licenses": [{"license": {"id": "BSD-3-Clause"}}],
+      "supplier": {"name": "pandas Development Team"}
+    },
+    {
+      "type": "library",
+      "name": "scikit-learn",
+      "version": "1.4.1",
+      "purl": "pkg:pypi/scikit-learn@1.4.1",
+      "licenses": [{"license": {"id": "BSD-3-Clause"}}],
+      "supplier": {"name": "scikit-learn developers"}
+    },
+    {
+      "type": "library",
+      "name": "gunicorn",
+      "version": "21.2.0",
+      "purl": "pkg:pypi/gunicorn@21.2.0",
+      "licenses": [{"license": {"id": "MIT"}}]
+    },
+    {
+      "type": "library",
+      "name": "celery",
+      "version": "5.3.6",
+      "purl": "pkg:pypi/celery@5.3.6",
+      "licenses": [{"license": {"id": "BSD-3-Clause"}}]
+    },
+    {
+      "type": "library",
+      "name": "redis",
+      "version": "5.0.1",
+      "purl": "pkg:pypi/redis@5.0.1",
+      "licenses": [{"license": {"id": "MIT"}}]
+    },
+    {
+      "type": "library",
+      "name": "sqlalchemy",
+      "version": "2.0.25",
+      "purl": "pkg:pypi/sqlalchemy@2.0.25",
+      "licenses": [{"license": {"id": "MIT"}}],
+      "supplier": {"name": "SQLAlchemy"}
+    },
+    {
+      "type": "library",
+      "name": "cryptography",
+      "version": "42.0.2",
+      "purl": "pkg:pypi/cryptography@42.0.2",
+      "licenses": [{"license": {"id": "Apache-2.0"}}]
+    },
+    {
+      "type": "library",
+      "name": "requests",
+      "version": "2.31.0",
+      "purl": "pkg:pypi/requests@2.31.0",
+      "licenses": [{"license": {"id": "Apache-2.0"}}]
+    }
+  ],
+  "vulnerabilities": [
+    {
+      "id": "CVE-2024-26130",
+      "source": {"name": "NVD"},
+      "ratings": [{"score": 7.5, "severity": "high", "method": "CVSSv31"}],
+      "cwes": [416],
+      "description": "cryptography package use-after-free in PKCS12 parsing",
+      "affects": [{"ref": "pkg:pypi/cryptography@42.0.2"}]
+    },
+    {
+      "id": "GHSA-9wx4-h78v-vm56",
+      "source": {"name": "GitHub Advisory"},
+      "ratings": [{"score": 5.3, "severity": "medium", "method": "CVSSv31"}],
+      "cwes": [400],
+      "description": "gunicorn worker process denial of service via HTTP header overflow",
+      "affects": [{"ref": "pkg:pypi/gunicorn@21.2.0"}]
+    },
+    {
+      "id": "CVE-2024-22195",
+      "source": {"name": "NVD"},
+      "ratings": [{"score": 6.1, "severity": "medium", "method": "CVSSv31"}],
+      "cwes": [79],
+      "description": "Jinja2 XSS via xmlattr filter (transitive dependency)",
+      "affects": [{"ref": "pkg:pypi/fastapi@0.109.2"}]
+    }
+  ]
+}

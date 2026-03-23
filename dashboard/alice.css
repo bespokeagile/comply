@@ -1,0 +1,166 @@
+/* alice.css -- Alice conversation panel styles for Comply SPA */
+
+.alice-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--bg-primary, #0d1117);
+  border-top: 1px solid var(--border-primary, #30363d);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.alice-panel-header {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  cursor: pointer;
+  user-select: none;
+  background: var(--bg-secondary, #161b22);
+  border-bottom: 1px solid var(--border-primary, #30363d);
+}
+
+.alice-panel-header:hover {
+  background: var(--bg-tertiary, #1c2128);
+}
+
+.alice-panel-title {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-primary, #c9d1d9);
+  margin-right: 8px;
+}
+
+.alice-panel-status {
+  font-size: 0.72rem;
+  color: var(--text-muted, #8b949e);
+  flex: 1;
+}
+
+.alice-panel-toggle {
+  font-size: 0.7rem;
+  color: var(--text-muted, #8b949e);
+}
+
+.alice-panel-body {
+  max-height: 280px;
+  display: flex;
+  flex-direction: column;
+}
+
+.alice-panel .alice-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 16px;
+  max-height: 180px;
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.alice-panel .alice-msg {
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(48, 54, 61, 0.3);
+  color: var(--text-secondary, #8b949e);
+}
+
+.alice-panel .alice-msg.user {
+  color: var(--text-primary, #c9d1d9);
+}
+
+.alice-panel .alice-sender {
+  font-weight: 600;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-right: 6px;
+  color: var(--accent-purple, #a371f7);
+}
+
+.alice-panel .alice-msg.user .alice-sender {
+  color: var(--accent-blue, #58a6ff);
+}
+
+.alice-panel .alice-time {
+  font-size: 0.68rem;
+  color: var(--text-muted, #484f58);
+  float: right;
+}
+
+.alice-panel .alice-shortcuts {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 6px 16px;
+  border-top: 1px solid var(--border-primary, #30363d);
+}
+
+.alice-panel .alice-shortcut {
+  padding: 3px 10px;
+  background: transparent;
+  border: 1px solid var(--border-primary, #30363d);
+  border-radius: 12px;
+  color: var(--accent-blue, #58a6ff);
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.alice-panel .alice-shortcut:hover {
+  background: rgba(56, 139, 253, 0.1);
+  border-color: var(--accent-blue, #58a6ff);
+}
+
+.alice-panel .alice-input-row {
+  display: flex;
+  gap: 8px;
+  padding: 8px 16px 12px;
+  border-top: 1px solid var(--border-primary, #30363d);
+}
+
+.alice-panel .alice-input {
+  flex: 1;
+  padding: 8px 12px;
+  background: var(--bg-primary, #0d1117);
+  border: 1px solid var(--border-primary, #30363d);
+  border-radius: 6px;
+  color: var(--text-primary, #c9d1d9);
+  font-size: 0.85rem;
+  font-family: inherit;
+  outline: none;
+}
+
+.alice-panel .alice-input:focus {
+  border-color: var(--accent-blue, #58a6ff);
+}
+
+.alice-panel .alice-input::placeholder {
+  color: var(--text-muted, #484f58);
+}
+
+.alice-panel .alice-send {
+  padding: 8px 16px;
+  background: var(--btn-primary-bg, #238636);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.alice-panel .alice-send:hover {
+  background: var(--btn-primary-hover, #2ea043);
+}
+
+/* Token transparency info */
+.alice-token-info {
+  font-size: 11px;
+  color: var(--text-muted, #484f58);
+  font-style: italic;
+  margin-top: 2px;
+}
+
+/* Ensure main content doesn't get hidden behind the fixed panel */
+.app-layout {
+  padding-bottom: 44px; /* Height of collapsed Alice header */
+}

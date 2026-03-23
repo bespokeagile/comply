@@ -1,0 +1,2 @@
+recursive-include comply *.yaml *.html *.css *.js *.yml
+include README.md

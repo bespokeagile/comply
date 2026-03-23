@@ -1,0 +1,1027 @@
+# gateway/compliance/frameworks.yaml
+# -------------------------------------------------------------------
+# Regulatory framework definitions for the standalone MCP Compliance
+# Gateway.  Each control maps to an evidence function implemented in
+# gateway/compliance/evidence.py.
+#
+# 10 frameworks, 119 controls total.
+# -------------------------------------------------------------------
+
+frameworks:
+
+  # ────────────────────────────────────────────────────────────────────
+  # 1. EU AI Act — Regulation (EU) 2024/1689
+  # ────────────────────────────────────────────────────────────────────
+  eu_ai_act:
+    label: "EU AI Act"
+    version: "2024/1689"
+    version_date: "2024-07-12"
+    description: >-
+      Regulation (EU) 2024/1689 of the European Parliament and of the
+      Council laying down harmonised rules on artificial intelligence
+      (Artificial Intelligence Act).
+    articles:
+      article_9_risk_management:
+        label: "Risk Management System (Art. 9)"
+        controls:
+          - id: "9.2a"
+            requirement: >-
+              Identification and analysis of the known and the
+              reasonably foreseeable risks that the high-risk AI system
+              can pose to health, safety, or fundamental rights.
+            evidence_fn: "evidence_risk_assessment_gateway"
+          - id: "9.6"
+            requirement: >-
+              Testing procedures shall be suitable to achieve the
+              intended purpose of the AI system and shall be performed
+              at appropriate points during the development process.
+            evidence_fn: "evidence_performance_measurement"
+
+      article_11_technical_documentation:
+        label: "Technical Documentation (Art. 11)"
+        controls:
+          - id: "11.1"
+            requirement: >-
+              Technical documentation of a high-risk AI system shall
+              be drawn up before that system is placed on the market or
+              put into service and shall be kept up to date.
+            evidence_fn: "evidence_audit_logging"
+
+      article_12_record_keeping:
+        label: "Record-Keeping (Art. 12)"
+        controls:
+          - id: "12.1"
+            requirement: >-
+              High-risk AI systems shall technically allow for the
+              automatic recording of events (logs) over the lifetime
+              of the system.
+            evidence_fn: "evidence_audit_logging"
+          - id: "12.2"
+            requirement: >-
+              Logging capabilities shall provide a level of
+              traceability of the AI system's functioning that is
+              appropriate to the intended purpose of the system.
+            evidence_fn: "evidence_traceability"
+
+      article_13_transparency:
+        label: "Transparency and Provision of Information (Art. 13)"
+        controls:
+          - id: "13.1"
+            requirement: >-
+              High-risk AI systems shall be designed and developed in
+              such a way as to ensure that their operation is
+              sufficiently transparent to enable deployers to interpret
+              a system's output and use it appropriately.
+            evidence_fn: "evidence_transparency_disclosure"
+
+      article_14_human_oversight:
+        label: "Human Oversight (Art. 14)"
+        controls:
+          - id: "14.4a"
+            requirement: >-
+              The individuals to whom human oversight is assigned must
+              be enabled to properly monitor the operation of the
+              high-risk AI system by means of appropriate tools.
+            evidence_fn: "evidence_continuous_monitoring"
+          - id: "14.4d"
+            requirement: >-
+              The individual to whom human oversight is assigned must
+              be able to decide, in any particular situation, not to
+              use the high-risk AI system or to otherwise disregard,
+              override, or reverse the output of the system.
+            evidence_fn: "evidence_human_oversight_gateway"
+
+  # ────────────────────────────────────────────────────────────────────
+  # 2. NIST AI Risk Management Framework (AI RMF 1.0)
+  # ────────────────────────────────────────────────────────────────────
+  nist_ai_rmf:
+    label: "NIST AI RMF"
+    version: "1.0"
+    version_date: "2023-01-26"
+    description: >-
+      NIST Artificial Intelligence Risk Management Framework 1.0 —
+      voluntary guidance for managing risks throughout the AI system
+      lifecycle.
+    articles:
+      govern:
+        label: "GOVERN — Culture, Policies and Accountability"
+        controls:
+          - id: "GV-1.1"
+            requirement: >-
+              Legal and regulatory requirements involving AI are
+              understood, managed, and documented.
+            evidence_fn: "evidence_governance_policy"
+          - id: "GV-1.2"
+            requirement: >-
+              Mechanisms are in place to define, assess, and
+              communicate risk tolerances for AI systems.
+            evidence_fn: "evidence_risk_categorization"
+          - id: "GV-3.1"
+            requirement: >-
+              Decision-making about AI system development, deployment,
+              and monitoring is documented and subject to governance.
+            evidence_fn: "evidence_change_management"
+
+      map:
+        label: "MAP — Context, Risk Identification and Framing"
+        controls:
+          - id: "MP-2.1"
+            requirement: >-
+              Potential risks of the AI system, including risks to
+              individuals, groups, communities, organisations, and
+              society, are identified in a systematic manner.
+            evidence_fn: "evidence_risk_categorization"
+          - id: "MP-4.1"
+            requirement: >-
+              Dependencies and interdependencies between AI system
+              components and external systems are characterised.
+            evidence_fn: "evidence_ai_system_inventory"
+
+      measure:
+        label: "MEASURE — Analysis, Assessment, Monitoring"
+        controls:
+          - id: "MS-1.1"
+            requirement: >-
+              Appropriate methods and metrics are identified and
+              applied to evaluate AI system trustworthiness.
+            evidence_fn: "evidence_performance_measurement"
+          - id: "MS-2.1"
+            requirement: >-
+              Evaluations involving human subjects adhere to the
+              organisation's policies and comply with applicable law.
+            evidence_fn: "evidence_continuous_monitoring"
+          - id: "MS-2.3"
+            requirement: >-
+              AI system performance or assurance criteria are
+              measured qualitatively or quantitatively and
+              demonstrated for conditions similar to deployment.
+            evidence_fn: "evidence_retention_compliance"
+          - id: "MS-3.1"
+            requirement: >-
+              AI risks and benefits from third-party entities are
+              tracked and managed throughout the lifecycle.
+            evidence_fn: "evidence_performance_measurement"
+
+      manage:
+        label: "MANAGE — Response, Recovery, Communication"
+        controls:
+          - id: "MG-2.1"
+            requirement: >-
+              Response plans for identified or emergent AI risks are
+              documented, implemented, and regularly tested.
+            evidence_fn: "evidence_incident_response"
+          - id: "MG-3.1"
+            requirement: >-
+              Identified AI risks are prioritised and treated in a
+              manner that is consistent with the organisation's risk
+              management approach.
+            evidence_fn: "evidence_risk_register_auto"
+          - id: "MG-4.1"
+            requirement: >-
+              Post-deployment monitoring of AI system performance and
+              residual risk is conducted and documented.
+            evidence_fn: "evidence_risk_assessment_gateway"
+
+  # ────────────────────────────────────────────────────────────────────
+  # 3. ISO/IEC 42001:2023 — AI Management System
+  # ────────────────────────────────────────────────────────────────────
+  iso_42001:
+    label: "ISO/IEC 42001"
+    version: "2023"
+    version_date: "2023-12-18"
+    description: >-
+      ISO/IEC 42001:2023 — Information technology — Artificial
+      intelligence — Management system.  Specifies requirements for
+      establishing, implementing, maintaining and continually
+      improving an AI management system within organisations.
+    articles:
+      clause_5_leadership:
+        label: "5 Leadership — AI Policy"
+        controls:
+          - id: "5.2"
+            requirement: >-
+              Top management shall establish an AI policy that is
+              appropriate to the purpose and context of the
+              organisation and provides a framework for setting AI
+              objectives.
+            evidence_fn: "evidence_governance_policy"
+
+      clause_6_planning:
+        label: "6 Planning — Risk and Objectives"
+        controls:
+          - id: "6.1"
+            requirement: >-
+              The organisation shall determine risks and
+              opportunities that need to be addressed to ensure the
+              AI management system can achieve its intended outcomes,
+              prevent undesired effects, and achieve continual
+              improvement.
+            evidence_fn: "evidence_risk_assessment_gateway"
+          - id: "6.2"
+            requirement: >-
+              The organisation shall establish AI objectives at
+              relevant functions, levels and processes, and plan how
+              to achieve them.
+            evidence_fn: "evidence_performance_measurement"
+
+      clause_7_support:
+        label: "7 Support — Competence and Awareness"
+        controls:
+          - id: "7.2"
+            requirement: >-
+              The organisation shall determine the necessary
+              competence of persons doing work that affects AI
+              management system performance and ensure these persons
+              are competent.
+            evidence_fn: "evidence_transparency_disclosure"
+
+      clause_8_operation:
+        label: "8 Operation — Planning and Control"
+        controls:
+          - id: "8.1"
+            requirement: >-
+              The organisation shall plan, implement, and control
+              the processes needed to meet requirements and to
+              implement the actions determined in clause 6, including
+              establishing criteria for the processes.
+            evidence_fn: "evidence_ai_system_inventory"
+
+      clause_9_evaluation:
+        label: "9 Performance Evaluation"
+        controls:
+          - id: "9.1"
+            requirement: >-
+              The organisation shall determine what needs to be
+              monitored and measured, including AI system performance
+              and the effectiveness of the AI management system.
+            evidence_fn: "evidence_continuous_monitoring"
+          - id: "9.2"
+            requirement: >-
+              The organisation shall conduct internal audits at
+              planned intervals to provide information on whether
+              the AI management system conforms to its own
+              requirements and is effectively implemented and
+              maintained.
+            evidence_fn: "evidence_audit_logging"
+
+      clause_10_improvement:
+        label: "10 Improvement"
+        controls:
+          - id: "10.1"
+            requirement: >-
+              The organisation shall continually improve the
+              suitability, adequacy, and effectiveness of the AI
+              management system through the use of the AI policy, AI
+              objectives, audit results, and management review.
+            evidence_fn: "evidence_change_management"
+
+      annex_a_controls:
+        label: "Annex A — Reference Controls"
+        controls:
+          - id: "A.2.2"
+            requirement: >-
+              An AI policy shall be documented, communicated, and
+              available to relevant interested parties as appropriate.
+            evidence_fn: "evidence_governance_policy"
+          - id: "A.6.2"
+            requirement: >-
+              The organisation shall assess the potential impacts of
+              the AI system on individuals, groups, and society
+              before deployment.
+            evidence_fn: "evidence_impact_documentation"
+
+  # ────────────────────────────────────────────────────────────────────
+  # 4. California AB 2013 — AI Transparency Act
+  # ────────────────────────────────────────────────────────────────────
+  california_ab_2013:
+    label: "California AB 2013"
+    version: "2024"
+    version_date: "2024-09-28"
+    description: >-
+      California Assembly Bill 2013 — requires developers of AI
+      systems to provide clear disclosure of the use of AI-generated
+      content, including data provenance and transparency
+      documentation.
+    articles:
+      transparency_requirements:
+        label: "Transparency and Disclosure Requirements"
+        controls:
+          - id: "AB2013-1"
+            requirement: >-
+              Developers of generative AI systems shall make
+              available on their internet website documentation
+              regarding the data used to train the system.
+            evidence_fn: "evidence_transparency_disclosure"
+          - id: "AB2013-2"
+            requirement: >-
+              AI-generated content shall include provenance
+              information sufficient to identify the source system
+              and training data characteristics.
+            evidence_fn: "evidence_data_handling"
+          - id: "AB2013-3"
+            requirement: >-
+              A clear and conspicuous disclosure shall be provided
+              whenever AI-generated content is presented to a user.
+            evidence_fn: "evidence_transparency_logging"
+
+  # ────────────────────────────────────────────────────────────────────
+  # 5. California SB 942 — AI Transparency Act
+  # ────────────────────────────────────────────────────────────────────
+  california_sb_942:
+    label: "California SB 942"
+    version: "2024"
+    version_date: "2024-09-19"
+    description: >-
+      California Senate Bill 942 — California AI Transparency Act,
+      requiring covered providers to disclose the use of generative
+      AI and provide attribution capabilities.
+    articles:
+      ai_transparency:
+        label: "AI Transparency and Attribution"
+        controls:
+          - id: "SB942-1"
+            requirement: >-
+              A covered provider shall make available a tool to
+              determine whether content was created or altered by
+              the provider's generative AI system.
+            evidence_fn: "evidence_transparency_disclosure"
+          - id: "SB942-2"
+            requirement: >-
+              A covered provider shall include provenance data in
+              AI-generated content including the name of the
+              provider and the AI system used.
+            evidence_fn: "evidence_traceability"
+          - id: "SB942-3"
+            requirement: >-
+              A covered provider shall maintain records of the
+              generative AI system's outputs, including metadata
+              and attribution information.
+            evidence_fn: "evidence_audit_logging"
+          - id: "SB942-4"
+            requirement: >-
+              Covered providers shall maintain clear accountability
+              mechanisms, including role-based access controls and
+              decision audit trails.
+            evidence_fn: "evidence_logical_access"
+
+  # ────────────────────────────────────────────────────────────────────
+  # 6. Colorado SB 24-205 — AI Consumer Protections
+  # ────────────────────────────────────────────────────────────────────
+  colorado_sb_24_205:
+    label: "Colorado SB 24-205"
+    version: "2024"
+    version_date: "2024-05-17"
+    description: >-
+      Colorado Senate Bill 24-205 — Concerning consumer protections
+      in interactions with artificial intelligence systems, requiring
+      impact assessments, risk disclosures, and governance for
+      high-risk AI systems.
+    articles:
+      consumer_protections:
+        label: "Consumer Protections for High-Risk AI"
+        controls:
+          - id: "CO205-1"
+            requirement: >-
+              A deployer of a high-risk AI system shall complete an
+              impact assessment for each high-risk system, including
+              the purpose, intended use, and foreseeable risks.
+            evidence_fn: "evidence_impact_documentation"
+          - id: "CO205-2"
+            requirement: >-
+              A deployer shall provide notice to a consumer when a
+              consequential decision has been made or substantially
+              assisted by a high-risk AI system.
+            evidence_fn: "evidence_consumer_notification"
+          - id: "CO205-3"
+            requirement: >-
+              A developer of a high-risk AI system shall provide to
+              deployers a description of the reasonably foreseeable
+              risks and known limitations of the system.
+            evidence_fn: "evidence_risk_assessment_gateway"
+          - id: "CO205-4"
+            requirement: >-
+              Deployers shall maintain records of all impact
+              assessments, risk mitigation actions, and consumer
+              notifications for the operational life of the system.
+            evidence_fn: "evidence_audit_logging"
+          - id: "CO205-5"
+            requirement: >-
+              A deployer shall implement a governance program that
+              includes risk management policies and assigns
+              accountability for compliance.
+            evidence_fn: "evidence_governance_program"
+
+  # ────────────────────────────────────────────────────────────────────
+  # 7. SOC 2 — AI Trust Services Criteria
+  # ────────────────────────────────────────────────────────────────────
+  soc2_ai:
+    label: "SOC 2 (AI)"
+    version: "2024"
+    version_date: "2024-06-01"
+    description: >-
+      AICPA SOC 2 Trust Services Criteria applied to AI systems —
+      evaluating logical access, monitoring, change management,
+      availability, processing integrity, and confidentiality
+      controls in AI-augmented environments.
+    articles:
+      trust_services:
+        label: "Trust Services Criteria for AI Systems"
+        controls:
+          - id: "CC6-AI"
+            requirement: >-
+              Logical and physical access controls restrict access
+              to AI systems and their data to authorised individuals
+              based on their roles and responsibilities.
+            evidence_fn: "evidence_logical_access"
+          - id: "CC7-AI"
+            requirement: >-
+              The entity monitors AI system components and operations
+              to detect anomalies, security events, and deviations
+              from expected behaviour.
+            evidence_fn: "evidence_continuous_monitoring"
+          - id: "CC8-AI"
+            requirement: >-
+              Changes to AI system infrastructure, data, software,
+              and procedures are authorised, designed, developed,
+              configured, documented, tested, and approved prior to
+              implementation.
+            evidence_fn: "evidence_change_management"
+          - id: "A1-AI"
+            requirement: >-
+              The entity maintains, monitors, and evaluates current
+              processing capacity and availability of AI system
+              components to meet business objectives.
+            evidence_fn: "evidence_availability_controls"
+          - id: "PI1-AI"
+            requirement: >-
+              The entity implements policies and procedures over AI
+              system processing to ensure completeness, validity,
+              accuracy, timeliness, and authorisation of system
+              processing.
+            evidence_fn: "evidence_performance_measurement"
+          - id: "C1-AI"
+            requirement: >-
+              Confidential information processed by AI systems,
+              including training data and inference inputs, is
+              protected during collection, processing, and disposal
+              in conformity with the entity's objectives.
+            evidence_fn: "evidence_data_handling"
+
+  # ────────────────────────────────────────────────────────────────────
+  # 8. Insurance AI Attestation Framework
+  # ────────────────────────────────────────────────────────────────────
+  insurance_attestation:
+    label: "Insurance AI Attestation"
+    version: "2024"
+    version_date: "2024-03-15"
+    description: >-
+      Insurance industry AI attestation framework — based on NAIC
+      Model Bulletin guidance for the governance and risk management
+      of artificial intelligence in insurance, requiring risk
+      registers, audit trails, governance documentation, and incident
+      response procedures.
+    articles:
+      attestation_requirements:
+        label: "AI Governance Attestation Requirements"
+        controls:
+          - id: "INS-1"
+            requirement: >-
+              The insurer shall maintain a risk register that
+              identifies, assesses, and tracks all material risks
+              associated with AI systems used in insurance operations.
+            evidence_fn: "evidence_risk_register_auto"
+          - id: "INS-2"
+            requirement: >-
+              The insurer shall maintain a comprehensive audit trail
+              of all decisions made by or with the assistance of AI
+              systems, including inputs, outputs, and human reviews.
+            evidence_fn: "evidence_audit_logging"
+          - id: "INS-3"
+            requirement: >-
+              The insurer shall establish and maintain an AI
+              governance framework, including board or senior
+              management oversight and clear lines of accountability.
+            evidence_fn: "evidence_governance_policy"
+          - id: "INS-4"
+            requirement: >-
+              The insurer shall document all policies, procedures,
+              and controls related to the development, validation,
+              and deployment of AI systems, and update them upon
+              material changes.
+            evidence_fn: "evidence_change_management"
+          - id: "INS-5"
+            requirement: >-
+              The insurer shall establish incident response
+              procedures for AI system failures, including
+              escalation paths, remediation steps, and notification
+              to affected parties.
+            evidence_fn: "evidence_incident_response"
+
+  # ────────────────────────────────────────────────────────────────────
+  # 9. OWASP Top 10 for LLM Applications (2025)
+  # ────────────────────────────────────────────────────────────────────
+  owasp_llm_top10:
+    label: "OWASP LLM Top 10"
+    version: "2025"
+    version_date: "2025-01-01"
+    description: >-
+      OWASP Top 10 for Large Language Model Applications — identifies
+      the most critical security risks for applications that leverage
+      LLMs, including prompt injection, data leakage, supply chain
+      vulnerabilities, and unbounded consumption.
+    articles:
+      llm01_prompt_injection:
+        label: "LLM01: Prompt Injection"
+        controls:
+          - id: "LLM01-1"
+            requirement: >-
+              Input to LLM-based systems shall be sanitised and
+              validated to prevent direct prompt injection attacks
+              that override system instructions.
+            evidence_fn: "evidence_input_sanitization"
+          - id: "LLM01-2"
+            requirement: >-
+              System prompts shall be protected from extraction
+              or manipulation through prompt hierarchy enforcement
+              and boundary separation.
+            evidence_fn: "evidence_prompt_protection"
+          - id: "LLM01-3"
+            requirement: >-
+              LLM outputs shall be validated and filtered before
+              being passed to downstream systems or presented to
+              users to prevent indirect prompt injection.
+            evidence_fn: "evidence_output_validation"
+
+      llm02_sensitive_info_disclosure:
+        label: "LLM02: Sensitive Information Disclosure"
+        controls:
+          - id: "LLM02-1"
+            requirement: >-
+              Sensitive data shall be identified, classified, and
+              protected during LLM training, fine-tuning, and
+              inference to prevent disclosure.
+            evidence_fn: "evidence_data_handling"
+          - id: "LLM02-2"
+            requirement: >-
+              Output filtering shall detect and redact sensitive
+              information including PII, credentials, and
+              proprietary data from LLM responses.
+            evidence_fn: "evidence_output_validation"
+
+      llm03_supply_chain:
+        label: "LLM03: Supply Chain"
+        controls:
+          - id: "LLM03-1"
+            requirement: >-
+              Model provenance shall be established and verified,
+              including version pinning, hash verification, and
+              registry integrity checks for all LLM dependencies.
+            evidence_fn: "evidence_model_provenance"
+          - id: "LLM03-2"
+            requirement: >-
+              Changes to LLM models, plugins, and data sources
+              shall be subject to change management controls
+              including review, testing, and approval processes.
+            evidence_fn: "evidence_change_management"
+          - id: "LLM03-3"
+            requirement: >-
+              AI and ML library dependencies shall be checked
+              against vulnerability databases (OSV, NVD) to
+              identify known CVEs before deployment.
+            evidence_fn: "evidence_ai_supply_chain"
+          - id: "LLM03-4"
+            requirement: >-
+              AI dependency versions shall be explicitly pinned
+              in manifest files to prevent unreviewed upgrades
+              that may introduce vulnerabilities or behaviour
+              changes.
+            evidence_fn: "evidence_ai_supply_chain"
+          - id: "LLM03-5"
+            requirement: >-
+              An inventory of all AI and ML dependencies shall
+              be maintained, including package name, version,
+              ecosystem, and source manifest file.
+            evidence_fn: "evidence_ai_supply_chain"
+
+      llm03_mcp_server_security:
+        label: "LLM03: MCP Server Security"
+        controls:
+          - id: "LLM03-MCP1"
+            requirement: >-
+              MCP server tool endpoints shall require
+              authentication, including API key validation,
+              OAuth tokens, or equivalent credential checks.
+            evidence_fn: "evidence_mcp_server_security"
+          - id: "LLM03-MCP2"
+            requirement: >-
+              All MCP tool inputs shall be validated against
+              a defined schema using libraries such as Pydantic,
+              JSON Schema, or Zod before execution.
+            evidence_fn: "evidence_mcp_server_security"
+          - id: "LLM03-MCP3"
+            requirement: >-
+              MCP server source code and configuration shall
+              not contain hardcoded credentials; secrets shall
+              be loaded from environment variables or vaults.
+            evidence_fn: "evidence_mcp_server_security"
+          - id: "LLM03-MCP4"
+            requirement: >-
+              MCP servers shall implement structured logging
+              that includes caller identity, tool invoked,
+              parameters, and result status for audit purposes.
+            evidence_fn: "evidence_mcp_server_security"
+          - id: "LLM03-MCP5"
+            requirement: >-
+              Rate limiting and budget controls shall be
+              applied to MCP tool endpoints to prevent abuse
+              and unbounded resource consumption.
+            evidence_fn: "evidence_mcp_server_security"
+          - id: "LLM03-MCP6"
+            requirement: >-
+              MCP server error responses shall be sanitised
+              to prevent exposure of internal implementation
+              details, stack traces, or sensitive configuration.
+            evidence_fn: "evidence_mcp_server_security"
+          - id: "LLM03-MCP7"
+            requirement: >-
+              MCP tool permissions shall follow the principle
+              of least privilege, with explicit capability
+              declarations and role-based access scoping.
+            evidence_fn: "evidence_mcp_server_security"
+          - id: "LLM03-MCP8"
+            requirement: >-
+              MCP servers communicating over the network shall
+              use TLS for all remote connections to prevent
+              interception of tool invocations and responses.
+            evidence_fn: "evidence_mcp_server_security"
+
+      llm04_data_model_poisoning:
+        label: "LLM04: Data and Model Poisoning"
+        controls:
+          - id: "LLM04-1"
+            requirement: >-
+              Training data and model artefacts shall have
+              documented provenance with integrity verification
+              to detect and prevent poisoning attacks.
+            evidence_fn: "evidence_model_provenance"
+          - id: "LLM04-2"
+            requirement: >-
+              Vector stores and embedding pipelines shall implement
+              access controls, input validation, and anomaly
+              detection to prevent embedding poisoning.
+            evidence_fn: "evidence_embedding_security"
+
+      llm05_improper_output_handling:
+        label: "LLM05: Improper Output Handling"
+        controls:
+          - id: "LLM05-1"
+            requirement: >-
+              LLM outputs shall be treated as untrusted and
+              validated before use in downstream operations
+              including code execution, API calls, and database
+              queries.
+            evidence_fn: "evidence_output_validation"
+          - id: "LLM05-2"
+            requirement: >-
+              Incident response procedures shall cover LLM-specific
+              failure modes including hallucination cascades,
+              output manipulation, and downstream system compromise.
+            evidence_fn: "evidence_incident_response"
+
+      llm06_excessive_agency:
+        label: "LLM06: Excessive Agency"
+        controls:
+          - id: "LLM06-1"
+            requirement: >-
+              LLM agent tool access shall follow the principle
+              of least privilege, with explicit permission scoping
+              for each tool and data source.
+            evidence_fn: "evidence_access_control"
+          - id: "LLM06-2"
+            requirement: >-
+              Human oversight mechanisms shall be in place for
+              high-impact LLM agent actions, including approval
+              workflows and intervention capabilities.
+            evidence_fn: "evidence_human_oversight_gateway"
+          - id: "LLM06-3"
+            requirement: >-
+              Rate limits, token budgets, and cost caps shall
+              constrain LLM agent consumption to prevent runaway
+              operations and resource exhaustion.
+            evidence_fn: "evidence_consumption_limits"
+
+      llm07_system_prompt_leakage:
+        label: "LLM07: System Prompt Leakage"
+        controls:
+          - id: "LLM07-1"
+            requirement: >-
+              System prompts shall be isolated from user-accessible
+              context using prompt hierarchy, boundary tokens, or
+              template separation techniques.
+            evidence_fn: "evidence_prompt_protection"
+          - id: "LLM07-2"
+            requirement: >-
+              Input filtering shall detect and block prompt
+              extraction attempts including instruction-following
+              attacks and context window manipulation.
+            evidence_fn: "evidence_input_sanitization"
+
+      llm08_vector_embedding_weaknesses:
+        label: "LLM08: Vector and Embedding Weaknesses"
+        controls:
+          - id: "LLM08-1"
+            requirement: >-
+              Vector databases and embedding stores shall implement
+              access controls, query validation, and integrity
+              checks to prevent unauthorised access and poisoning.
+            evidence_fn: "evidence_embedding_security"
+          - id: "LLM08-2"
+            requirement: >-
+              RAG pipelines shall implement data provenance
+              tracking and access controls to prevent sensitive
+              data leakage through embedding retrieval.
+            evidence_fn: "evidence_data_handling"
+
+      llm09_misinformation:
+        label: "LLM09: Misinformation"
+        controls:
+          - id: "LLM09-1"
+            requirement: >-
+              LLM outputs shall be validated for factual accuracy
+              using grounding techniques, retrieval augmentation,
+              or cross-reference verification.
+            evidence_fn: "evidence_output_validation"
+          - id: "LLM09-2"
+            requirement: >-
+              Users shall be clearly informed when content is
+              AI-generated, including confidence indicators and
+              source attribution where applicable.
+            evidence_fn: "evidence_transparency_disclosure"
+
+      llm10_unbounded_consumption:
+        label: "LLM10: Unbounded Consumption"
+        controls:
+          - id: "LLM10-1"
+            requirement: >-
+              Token consumption and API call rates shall be
+              monitored and bounded with per-user, per-agent,
+              and per-session limits.
+            evidence_fn: "evidence_consumption_limits"
+          - id: "LLM10-2"
+            requirement: >-
+              Cost tracking and alerting shall be implemented
+              for all LLM API usage with configurable thresholds
+              and automatic circuit breakers.
+            evidence_fn: "evidence_continuous_monitoring"
+          - id: "LLM10-3"
+            requirement: >-
+              Resource quotas shall enforce maximum concurrent
+              requests, context window sizes, and output lengths
+              to prevent denial-of-service conditions.
+            evidence_fn: "evidence_consumption_limits"
+
+  # ────────────────────────────────────────────────────────────────────
+  # 10. OWASP Top 10 for Agentic Applications (2026) — December 2025
+  # ────────────────────────────────────────────────────────────────────
+  owasp_agentic_top10:
+    label: "OWASP Top 10 for Agentic Applications"
+    version: "2026"
+    version_date: "2025-12-09"
+    description: >-
+      OWASP Top 10 risks for AI agent systems, published December 2025
+      by the OWASP GenAI Security Project.  Covers autonomous agent
+      risks including goal hijacking, tool misuse, identity abuse,
+      supply chain, code execution, memory poisoning, inter-agent
+      communication, cascading failures, trust exploitation, and
+      rogue agent behaviour.
+    articles:
+
+      asi01_agent_goal_hijack:
+        label: "ASI01: Agent Goal Hijack"
+        controls:
+          - id: "ASI01-1"
+            requirement: >-
+              Agent goals, plans, and decision paths shall be
+              protected against direct and indirect instruction
+              injection through input validation and prompt
+              boundary enforcement.
+            evidence_fn: "evidence_agent_goal_protection"
+          - id: "ASI01-2"
+            requirement: >-
+              External content (emails, documents, web pages)
+              processed by agents shall be sanitised to remove
+              hidden instructions before being incorporated into
+              agent reasoning context.
+            evidence_fn: "evidence_input_sanitization"
+          - id: "ASI01-3"
+            requirement: >-
+              Agent goal modifications shall require explicit
+              human confirmation for high-impact actions, with
+              immutable logging of all goal state transitions.
+            evidence_fn: "evidence_human_oversight_gateway"
+
+      asi02_tool_misuse:
+        label: "ASI02: Tool Misuse and Exploitation"
+        controls:
+          - id: "ASI02-1"
+            requirement: >-
+              Agent tool access shall follow least-privilege
+              principles with explicit per-tool permission grants,
+              preventing recursive tool calls and unsafe tool
+              composition.
+            evidence_fn: "evidence_agent_tool_governance"
+          - id: "ASI02-2"
+            requirement: >-
+              Tool invocations shall be bounded with per-session
+              call limits, budget caps, and circuit breakers to
+              prevent tool budget exhaustion and runaway execution.
+            evidence_fn: "evidence_consumption_limits"
+          - id: "ASI02-3"
+            requirement: >-
+              Side effects of tool calls (file writes, network
+              requests, database mutations) shall be sandboxed
+              or require explicit approval before execution.
+            evidence_fn: "evidence_code_execution_safety"
+
+      asi03_identity_privilege_abuse:
+        label: "ASI03: Identity and Privilege Abuse"
+        controls:
+          - id: "ASI03-1"
+            requirement: >-
+              Agents shall operate under dedicated service
+              identities with scoped credentials, never inheriting
+              or reusing human user tokens or session cookies.
+            evidence_fn: "evidence_agent_identity"
+          - id: "ASI03-2"
+            requirement: >-
+              Cross-agent trust shall require mutual authentication
+              and explicit capability delegation, preventing agent
+              impersonation and lateral movement.
+            evidence_fn: "evidence_access_control"
+          - id: "ASI03-3"
+            requirement: >-
+              Privilege escalation boundaries shall be enforced
+              through role-based access control with audit logging
+              of all credential usage and delegation events.
+            evidence_fn: "evidence_audit_logging"
+
+      asi04_agentic_supply_chain:
+        label: "ASI04: Agentic Supply Chain Vulnerabilities"
+        controls:
+          - id: "ASI04-1"
+            requirement: >-
+              Runtime dependencies including MCP servers, plugins,
+              model APIs, and open-source packages shall be
+              version-pinned and verified against known
+              vulnerability databases.
+            evidence_fn: "evidence_ai_supply_chain"
+          - id: "ASI04-2"
+            requirement: >-
+              Dynamically loaded tools, plugins, and prompts shall
+              be validated against signed manifests or schema
+              registries before runtime activation.
+            evidence_fn: "evidence_mcp_server_security"
+          - id: "ASI04-3"
+            requirement: >-
+              Plugin and model registries shall enforce integrity
+              checks to prevent schema manipulation, description
+              deception, and registry poisoning attacks.
+            evidence_fn: "evidence_model_provenance"
+
+      asi05_unexpected_code_execution:
+        label: "ASI05: Unexpected Code Execution"
+        controls:
+          - id: "ASI05-1"
+            requirement: >-
+              Agent-generated code shall execute in isolated
+              sandboxed environments with restricted filesystem,
+              network, and process capabilities.
+            evidence_fn: "evidence_code_execution_safety"
+          - id: "ASI05-2"
+            requirement: >-
+              Dynamic code generation features (eval, exec, shell
+              commands) shall be disabled by default or restricted
+              to an allow-list of safe operations with mandatory
+              output validation.
+            evidence_fn: "evidence_code_execution_safety"
+          - id: "ASI05-3"
+            requirement: >-
+              All agent-triggered code execution shall be logged
+              with full context including the originating prompt,
+              generated code, and execution results.
+            evidence_fn: "evidence_audit_logging"
+
+      asi06_memory_context_poisoning:
+        label: "ASI06: Memory and Context Poisoning"
+        controls:
+          - id: "ASI06-1"
+            requirement: >-
+              Long-term agent memory stores, RAG knowledge bases,
+              and scratchpads shall implement integrity checks
+              and access controls to prevent unauthorised
+              modification.
+            evidence_fn: "evidence_memory_integrity"
+          - id: "ASI06-2"
+            requirement: >-
+              Memory write operations shall validate content
+              provenance and detect injection attempts before
+              persisting to long-term stores.
+            evidence_fn: "evidence_memory_integrity"
+          - id: "ASI06-3"
+            requirement: >-
+              Context retrieval pipelines shall implement
+              freshness checks, source attribution, and anomaly
+              detection to identify poisoned entries.
+            evidence_fn: "evidence_embedding_security"
+
+      asi07_insecure_inter_agent_communication:
+        label: "ASI07: Insecure Inter-Agent Communication"
+        controls:
+          - id: "ASI07-1"
+            requirement: >-
+              Inter-agent message channels (MCP, A2A, RPC, shared
+              memory) shall use mutual TLS or equivalent
+              transport-layer encryption with certificate
+              validation.
+            evidence_fn: "evidence_agent_communication_security"
+          - id: "ASI07-2"
+            requirement: >-
+              Agent-to-agent messages shall carry signed payloads
+              with sender authentication, message integrity, and
+              replay protection.
+            evidence_fn: "evidence_agent_communication_security"
+          - id: "ASI07-3"
+            requirement: >-
+              Message routing between agents shall enforce schema
+              validation and content inspection to prevent
+              injection and spoofing attacks.
+            evidence_fn: "evidence_input_sanitization"
+
+      asi08_cascading_failures:
+        label: "ASI08: Cascading Failures"
+        controls:
+          - id: "ASI08-1"
+            requirement: >-
+              Agent systems shall implement circuit breakers,
+              timeout policies, and bulkhead isolation to prevent
+              error propagation across agent chains and tool
+              dependencies.
+            evidence_fn: "evidence_cascade_protection"
+          - id: "ASI08-2"
+            requirement: >-
+              Failure modes shall be designed to fail safely with
+              graceful degradation rather than cascading through
+              connected agents and downstream systems.
+            evidence_fn: "evidence_incident_response"
+          - id: "ASI08-3"
+            requirement: >-
+              Agent system health shall be continuously monitored
+              with automated alerting for anomalous error rates,
+              latency spikes, and resource exhaustion patterns.
+            evidence_fn: "evidence_continuous_monitoring"
+
+      asi09_human_agent_trust_exploitation:
+        label: "ASI09: Human-Agent Trust Exploitation"
+        controls:
+          - id: "ASI09-1"
+            requirement: >-
+              High-impact agent actions (financial transactions,
+              data deletion, external communications) shall
+              require explicit human confirmation with clear
+              explanation of consequences.
+            evidence_fn: "evidence_human_oversight_gateway"
+          - id: "ASI09-2"
+            requirement: >-
+              Agent outputs shall clearly indicate AI-generated
+              content, confidence levels, and data sources to
+              prevent authority bias exploitation.
+            evidence_fn: "evidence_transparency_disclosure"
+          - id: "ASI09-3"
+            requirement: >-
+              An immutable audit trail shall record all agent
+              recommendations and human decisions, enabling
+              post-hoc review of influence patterns.
+            evidence_fn: "evidence_audit_logging"
+
+      asi10_rogue_agents:
+        label: "ASI10: Rogue Agents"
+        controls:
+          - id: "ASI10-1"
+            requirement: >-
+              Agent behaviour shall be bounded by explicit
+              constraints, resource limits, and kill switches
+              that can terminate runaway agents regardless of
+              their internal state.
+            evidence_fn: "evidence_agent_containment"
+          - id: "ASI10-2"
+            requirement: >-
+              Agent goal alignment shall be continuously verified
+              through behavioural monitoring, detecting goal drift,
+              reward hacking, and emergent unintended optimisations.
+            evidence_fn: "evidence_continuous_monitoring"
+          - id: "ASI10-3"
+            requirement: >-
+              Multi-agent systems shall prevent agent collusion
+              through communication channel restrictions, action
+              logging, and independent oversight mechanisms.
+            evidence_fn: "evidence_agent_containment"

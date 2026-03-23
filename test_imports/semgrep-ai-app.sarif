@@ -1,0 +1,113 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Semgrep",
+          "version": "1.56.0",
+          "rules": [
+            {"id": "python.lang.security.audit.dangerous-subprocess-use", "shortDescription": {"text": "Dangerous subprocess use"}, "properties": {"tags": ["CWE-78"]}},
+            {"id": "python.lang.security.audit.hardcoded-password", "shortDescription": {"text": "Hardcoded password"}, "properties": {"tags": ["CWE-798"]}},
+            {"id": "python.django.security.injection.sql-injection", "shortDescription": {"text": "SQL injection"}, "properties": {"tags": ["CWE-89"]}},
+            {"id": "python.lang.security.deserialization.avoid-pickle", "shortDescription": {"text": "Unsafe deserialization"}, "properties": {"tags": ["CWE-502"]}},
+            {"id": "python.flask.security.xss.direct-response-xss", "shortDescription": {"text": "Cross-site scripting"}, "properties": {"tags": ["CWE-79"]}},
+            {"id": "python.lang.security.audit.insecure-hash-md5", "shortDescription": {"text": "Insecure hash algorithm"}, "properties": {"tags": ["CWE-327"]}},
+            {"id": "python.lang.security.audit.logging-sensitive-data", "shortDescription": {"text": "Sensitive data in logs"}, "properties": {"tags": ["CWE-532"]}}
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "python.lang.security.audit.dangerous-subprocess-use",
+          "level": "error",
+          "message": {"text": "Subprocess call with shell=True and user-controlled input allows command injection."},
+          "locations": [{"physicalLocation": {"artifactLocation": {"uri": "src/agents/tool_executor.py"}, "region": {"startLine": 87, "endLine": 92}}}],
+          "properties": {"cwe": ["CWE-78"]},
+          "codeFlows": [{"threadFlows": [{"locations": [
+            {"location": {"physicalLocation": {"artifactLocation": {"uri": "src/agents/tool_executor.py"}, "region": {"startLine": 45}}, "message": {"text": "User input from tool request"}}}
+          ]}]}]
+        },
+        {
+          "ruleId": "python.lang.security.audit.hardcoded-password",
+          "level": "error",
+          "message": {"text": "Hardcoded API key found in source code. Use environment variables or a secrets manager."},
+          "locations": [{"physicalLocation": {"artifactLocation": {"uri": "src/config/settings.py"}, "region": {"startLine": 23, "endLine": 23}}}],
+          "properties": {"cwe": ["CWE-798"]}
+        },
+        {
+          "ruleId": "python.django.security.injection.sql-injection",
+          "level": "error",
+          "message": {"text": "String concatenation in SQL query. Use parameterized queries to prevent SQL injection."},
+          "locations": [{"physicalLocation": {"artifactLocation": {"uri": "src/data/user_store.py"}, "region": {"startLine": 134, "endLine": 138}}}],
+          "properties": {"cwe": ["CWE-89"]},
+          "fixes": [{"description": {"text": "Use parameterized query"}, "artifactChanges": [{"artifactLocation": {"uri": "src/data/user_store.py"}}]}]
+        },
+        {
+          "ruleId": "python.lang.security.deserialization.avoid-pickle",
+          "level": "warning",
+          "message": {"text": "Pickle deserialization of untrusted data can lead to arbitrary code execution."},
+          "locations": [{"physicalLocation": {"artifactLocation": {"uri": "src/ml/model_loader.py"}, "region": {"startLine": 56, "endLine": 58}}}],
+          "properties": {"cwe": ["CWE-502"]}
+        },
+        {
+          "ruleId": "python.flask.security.xss.direct-response-xss",
+          "level": "warning",
+          "message": {"text": "User input rendered directly in HTML response without escaping."},
+          "locations": [{"physicalLocation": {"artifactLocation": {"uri": "src/api/dashboard.py"}, "region": {"startLine": 201, "endLine": 205}}}],
+          "properties": {"cwe": ["CWE-79"]}
+        },
+        {
+          "ruleId": "python.lang.security.audit.insecure-hash-md5",
+          "level": "warning",
+          "message": {"text": "MD5 is cryptographically broken. Use SHA-256 or stronger for security-sensitive hashing."},
+          "locations": [{"physicalLocation": {"artifactLocation": {"uri": "src/auth/token_manager.py"}, "region": {"startLine": 34, "endLine": 34}}}],
+          "properties": {"cwe": ["CWE-327"]}
+        },
+        {
+          "ruleId": "python.lang.security.audit.logging-sensitive-data",
+          "level": "warning",
+          "message": {"text": "Logging statement includes sensitive user data. Mask or remove PII from log output."},
+          "locations": [{"physicalLocation": {"artifactLocation": {"uri": "src/api/routes.py"}, "region": {"startLine": 89, "endLine": 89}}}],
+          "properties": {"cwe": ["CWE-532"]}
+        },
+        {
+          "ruleId": "python.lang.security.audit.dangerous-subprocess-use",
+          "level": "error",
+          "message": {"text": "os.system() call with formatted string. Use subprocess with shell=False instead."},
+          "locations": [{"physicalLocation": {"artifactLocation": {"uri": "src/deploy/runner.py"}, "region": {"startLine": 112, "endLine": 112}}}],
+          "properties": {"cwe": ["CWE-78"]}
+        },
+        {
+          "ruleId": "python.django.security.injection.sql-injection",
+          "level": "warning",
+          "message": {"text": "f-string used in database query construction."},
+          "locations": [{"physicalLocation": {"artifactLocation": {"uri": "src/data/analytics.py"}, "region": {"startLine": 67, "endLine": 70}}}],
+          "properties": {"cwe": ["CWE-89"]}
+        },
+        {
+          "ruleId": "python.lang.security.audit.hardcoded-password",
+          "level": "warning",
+          "message": {"text": "Default password in configuration fallback."},
+          "locations": [{"physicalLocation": {"artifactLocation": {"uri": "src/auth/oauth.py"}, "region": {"startLine": 15, "endLine": 15}}}],
+          "properties": {"cwe": ["CWE-798"]}
+        },
+        {
+          "ruleId": "python.lang.security.deserialization.avoid-pickle",
+          "level": "error",
+          "message": {"text": "torch.load() without weights_only=True allows arbitrary code execution via pickle."},
+          "locations": [{"physicalLocation": {"artifactLocation": {"uri": "src/ml/inference.py"}, "region": {"startLine": 23, "endLine": 25}}}],
+          "properties": {"cwe": ["CWE-502"]}
+        },
+        {
+          "ruleId": "python.flask.security.xss.direct-response-xss",
+          "level": "warning",
+          "message": {"text": "Template renders user-supplied model output without sanitization."},
+          "locations": [{"physicalLocation": {"artifactLocation": {"uri": "src/api/chat_view.py"}, "region": {"startLine": 44, "endLine": 48}}}],
+          "properties": {"cwe": ["CWE-79"]}
+        }
+      ]
+    }
+  ]
+}

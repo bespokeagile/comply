@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BespokeAgile Comply</title>
+    <link rel="stylesheet" href="/dashboard/style.css">
+    <link rel="stylesheet" href="/dashboard/demo.css">
+    <link rel="stylesheet" href="/dashboard/alice.css">
+</head>
+<body>
+    <a href="#app" class="skip-link">Skip to content</a>
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <nav class="sidebar" role="navigation" aria-label="Main navigation">
+            <div class="sidebar-header">
+                <h1 class="logo">Comply</h1>
+                <span class="version" id="version-badge">v1.0.2</span>
+            </div>
+
+            <!-- Sidebar panels (one visible at a time) -->
+            <div class="sidebar-panels">
+                <!-- Repos panel: repo list grouped by repo with framework badges -->
+                <div class="sidebar-panel active" id="sidebar-repos" role="tabpanel" aria-labelledby="sidebar-repos">
+                    <div class="sidebar-scan-header">
+                        <span class="sidebar-scan-title">Repositories</span>
+                        <button class="btn btn-sm btn-primary repo-sidebar-add" onclick="App.newScanWithContext()" title="New scan">+</button>
+                    </div>
+                    <div class="sidebar-panel-list" id="sidebar-scan-list">
+                        <div class="sidebar-panel-empty">No scans yet</div>
+                    </div>
+                    <div class="sidebar-scan-footer" id="sidebar-scan-footer">
+                        <button class="btn btn-primary btn-sm" onclick="App.newScanWithContext()" style="flex:1">+ New Scan</button>
+                        <button class="btn btn-sm btn-muted" onclick="App.clearScanHistory()" title="Clear all scan history" style="flex:0 0 auto">Clear</button>
+                    </div>
+                </div>
+
+                <!-- Ops panel: gate + monitors (flat list, no sub-nav) -->
+                <div class="sidebar-panel" id="sidebar-ops" role="tabpanel" aria-labelledby="sidebar-ops">
+                    <div class="sidebar-panel-list" id="sidebar-ops-list">
+                        <div class="sidebar-panel-empty">Loading...</div>
+                    </div>
+                </div>
+
+                <!-- Config panel: flat list, no sub-nav -->
+                <div class="sidebar-panel" id="sidebar-config" role="tabpanel" aria-labelledby="sidebar-config">
+                    <div class="sidebar-panel-list" id="sidebar-config-list"></div>
+                </div>
+            </div>
+
+            <!-- Tab bar at BOTTOM of sidebar (self-hosted mode) -->
+            <div class="sidebar-tabs" id="sidebar-tabs" role="tablist" aria-label="Sidebar sections">
+                <button class="sidebar-tab active" data-tab="repos" role="tab" aria-selected="true" aria-controls="sidebar-repos" onclick="App.switchTab('repos')">Repos</button>
+                <button class="sidebar-tab" data-tab="ops" role="tab" aria-selected="false" aria-controls="sidebar-ops" onclick="App.switchTab('ops')">Ops</button>
+                <button class="sidebar-tab" data-tab="config" role="tab" aria-selected="false" aria-controls="sidebar-config" onclick="App.switchTab('config')">Config</button>
+            </div>
+
+            <!-- Demo mode nav (shown via JS when capabilities.demo_mode is true) -->
+            <ul class="nav-links" id="legacy-nav" style="display:none">
+                <li><a href="#/landing" class="nav-link" data-route="landing">Home</a></li>
+                <li id="nav-last-result" style="display:none"><a href="#/" class="nav-link" data-route="detail">Results</a></li>
+                <li><a href="#/history" class="nav-link" data-route="history">History</a></li>
+                <li><a href="#/mapping" class="nav-link" data-route="mapping">Mapping</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <div class="tier-badge" id="tier-badge"></div>
+            </div>
+        </nav>
+        <div class="sidebar-resize-handle" id="sidebar-resize-handle"></div>
+
+        <!-- Main Content Area (sidebar + app) -->
+        <div class="content-area">
+            <nav id="repo-sidebar" style="display:none">
+                <div class="repo-sidebar-header">
+                    <span class="repo-sidebar-brand">BespokeAgile <strong>Comply</strong></span>
+                    <button class="btn btn-sm btn-primary repo-sidebar-add" onclick="App.openScanForm()" title="New scan">+</button>
+                </div>
+                <div class="repo-sidebar-list" id="repo-sidebar-list"></div>
+            </nav>
+            <div class="content-wrapper">
+                <main class="content" id="app" role="main">
+                    <div class="loading">Loading...</div>
+                </main>
+                <!-- Bottom content sub-tabs (shown when repo has multiple scans) -->
+                <div class="content-subtabs" id="content-subtabs" style="display:none">
+                    <a class="content-subtab" data-subtab="compare" href="#" onclick="App.switchContentTab('compare');return false;">Compare</a>
+                    <a class="content-subtab" data-subtab="history" href="#" onclick="App.switchContentTab('history');return false;">History</a>
+                    <a class="content-subtab" data-subtab="forecast" href="#" onclick="App.switchContentTab('forecast');return false;">Forecast</a>
+                </div>
+            </div>
+        </div>
+        <button class="sidebar-toggle" id="sidebar-toggle" style="display:none" onclick="App.toggleSidebar()" aria-label="Toggle sidebar menu">&#9776;</button>
+    </div>
+
+    <!-- Alice conversation panel (hidden by default; shown when LLM key is configured) -->
+    <div id="alice-panel" class="alice-panel" style="display:none">
+        <div class="alice-panel-header" onclick="App.toggleAlice()">
+            <span class="alice-panel-title">Alice</span>
+            <span class="alice-panel-status" id="alice-status">Ready</span>
+            <span class="alice-panel-toggle" id="alice-toggle-icon">&#9650;</span>
+        </div>
+        <div class="alice-panel-body" id="alice-panel-body">
+            <div class="alice-messages" id="alice-messages"></div>
+            <div class="alice-shortcuts">
+                <button class="alice-shortcut" onclick="App.aliceShortcut('Scan my code')">Scan my code</button>
+                <button class="alice-shortcut" onclick="App.aliceShortcut('What to fix first')">What to fix first</button>
+                <button class="alice-shortcut" onclick="App.aliceShortcut('What changed')">What changed</button>
+                <button class="alice-shortcut" onclick="App.aliceShortcut('Deeper analysis')">Deeper analysis</button>
+            </div>
+            <div class="alice-input-row">
+                <input class="alice-input" id="alice-input" placeholder="Ask Alice about your compliance..." onkeydown="if(event.key==='Enter')App.sendToAlice()">
+                <button class="alice-send" onclick="App.sendToAlice()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core scripts (needed for initial render) -->
+    <script src="/dashboard/router.js"></script>
+    <script src="/dashboard/api.js"></script>
+    <script src="/dashboard/components.js"></script>
+    <script defer src="/dashboard/bridge.js"></script>
+    <!-- View scripts (deferred — loaded after DOM) -->
+    <script defer src="/dashboard/views/scan.js"></script>
+    <script defer src="/dashboard/views/history.js"></script>
+    <script defer src="/dashboard/views/detail.js"></script>
+    <script defer src="/dashboard/views/trends.js"></script>
+    <script defer src="/dashboard/views/adapters.js"></script>
+    <script defer src="/dashboard/views/diff.js"></script>
+    <script defer src="/dashboard/views/compare.js"></script>
+    <script defer src="/dashboard/views/audit.js"></script>
+    <script defer src="/dashboard/views/mapping.js"></script>
+    <script defer src="/dashboard/views/forecast.js"></script>
+    <script defer src="/dashboard/views/gate.js"></script>
+    <script defer src="/dashboard/views/monitor.js"></script>
+    <script defer src="/dashboard/views/settings.js"></script>
+    <script defer src="/dashboard/views/overlap.js"></script>
+    <script defer src="/dashboard/views/progress.js"></script>
+    <script defer src="/dashboard/views/posture.js"></script>
+    <script defer src="/dashboard/views/program.js"></script>
+    <script defer src="/dashboard/views/demo.js"></script>
+    <script defer src="/dashboard/views/landing.js"></script>
+    <script defer src="/dashboard/views/home.js"></script>
+    <script defer src="/dashboard/report.js"></script>
+    <script defer src="/dashboard/codegen.js"></script>
+    <!-- Data layer (deferred, but order-preserved by defer) -->
+    <script defer src="/dashboard/crypto.js"></script>
+    <script defer src="/dashboard/scandb.js"></script>
+    <script defer src="/dashboard/stores.js"></script>
+    <!-- Alice conversation panel -->
+    <script defer src="/dashboard/alice.js"></script>
+    <!-- App init (last — depends on all above) -->
+    <script defer src="/dashboard/app.js"></script>
+</body>
+</html>

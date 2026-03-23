@@ -1,0 +1,111 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "patient-risk-service",
+  "documentNamespace": "https://example.com/patient-risk-service-1.0.0",
+  "creationInfo": {
+    "created": "2026-03-09T08:00:00Z",
+    "creators": ["Tool: trivy-0.49.1", "Organization: HealthTech Inc."]
+  },
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-DOCUMENT",
+      "name": "patient-risk-service",
+      "versionInfo": "1.0.0",
+      "downloadLocation": "NOASSERTION"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-tensorflow",
+      "name": "tensorflow",
+      "versionInfo": "2.15.0",
+      "supplier": "Organization: Google",
+      "licenseConcluded": "Apache-2.0",
+      "downloadLocation": "https://pypi.org/project/tensorflow/",
+      "externalRefs": [{"referenceType": "purl", "referenceLocator": "pkg:pypi/tensorflow@2.15.0", "referenceCategory": "PACKAGE-MANAGER"}]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-keras",
+      "name": "keras",
+      "versionInfo": "2.15.0",
+      "supplier": "Organization: Google",
+      "licenseConcluded": "Apache-2.0",
+      "downloadLocation": "https://pypi.org/project/keras/",
+      "externalRefs": [{"referenceType": "purl", "referenceLocator": "pkg:pypi/keras@2.15.0", "referenceCategory": "PACKAGE-MANAGER"}]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-xgboost",
+      "name": "xgboost",
+      "versionInfo": "2.0.3",
+      "supplier": "Organization: DMLC",
+      "licenseConcluded": "Apache-2.0",
+      "downloadLocation": "https://pypi.org/project/xgboost/",
+      "externalRefs": [{"referenceType": "purl", "referenceLocator": "pkg:pypi/xgboost@2.0.3", "referenceCategory": "PACKAGE-MANAGER"}]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-pandas",
+      "name": "pandas",
+      "versionInfo": "2.2.0",
+      "supplier": "Organization: pandas Development Team",
+      "licenseConcluded": "BSD-3-Clause",
+      "downloadLocation": "https://pypi.org/project/pandas/",
+      "externalRefs": [{"referenceType": "purl", "referenceLocator": "pkg:pypi/pandas@2.2.0", "referenceCategory": "PACKAGE-MANAGER"}]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-scikit-learn",
+      "name": "scikit-learn",
+      "versionInfo": "1.4.1",
+      "supplier": "Organization: scikit-learn developers",
+      "licenseConcluded": "BSD-3-Clause",
+      "downloadLocation": "https://pypi.org/project/scikit-learn/",
+      "externalRefs": [{"referenceType": "purl", "referenceLocator": "pkg:pypi/scikit-learn@1.4.1", "referenceCategory": "PACKAGE-MANAGER"}]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-flask",
+      "name": "flask",
+      "versionInfo": "3.0.2",
+      "licenseConcluded": "BSD-3-Clause",
+      "downloadLocation": "https://pypi.org/project/flask/",
+      "externalRefs": [{"referenceType": "purl", "referenceLocator": "pkg:pypi/flask@3.0.2", "referenceCategory": "PACKAGE-MANAGER"}]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-psycopg2",
+      "name": "psycopg2-binary",
+      "versionInfo": "2.9.9",
+      "licenseConcluded": "LGPL-3.0-only",
+      "downloadLocation": "https://pypi.org/project/psycopg2-binary/",
+      "externalRefs": [{"referenceType": "purl", "referenceLocator": "pkg:pypi/psycopg2-binary@2.9.9", "referenceCategory": "PACKAGE-MANAGER"}]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-pyjwt",
+      "name": "PyJWT",
+      "versionInfo": "2.8.0",
+      "licenseConcluded": "MIT",
+      "downloadLocation": "https://pypi.org/project/PyJWT/"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-boto3",
+      "name": "boto3",
+      "versionInfo": "1.34.44",
+      "supplier": "Organization: Amazon Web Services",
+      "licenseConcluded": "Apache-2.0",
+      "downloadLocation": "https://pypi.org/project/boto3/"
+    },
+    {
+      "SPDXID": "SPDXRef-Package-numpy",
+      "name": "numpy",
+      "versionInfo": "1.26.4",
+      "supplier": "Organization: NumPy Developers",
+      "licenseConcluded": "BSD-3-Clause",
+      "downloadLocation": "https://pypi.org/project/numpy/",
+      "externalRefs": [{"referenceType": "purl", "referenceLocator": "pkg:pypi/numpy@1.26.4", "referenceCategory": "PACKAGE-MANAGER"}]
+    },
+    {
+      "SPDXID": "SPDXRef-Package-hl7",
+      "name": "python-hl7",
+      "versionInfo": "0.4.5",
+      "licenseConcluded": "BSD-3-Clause",
+      "downloadLocation": "https://pypi.org/project/python-hl7/"
+    }
+  ]
+}

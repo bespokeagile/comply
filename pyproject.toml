@@ -1,0 +1,72 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bespoke-comply"
+version = "2.0.0"
+description = "Compliance gap analysis for any codebase -- standalone scanner, CI/CD integration, and web dashboard"
+readme = "README.md"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.9"
+authors = [{name = "BespokeAgile"}]
+keywords = ["compliance", "ai-act", "governance", "scanner", "ci-cd"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Quality Assurance",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: Apache Software License",
+]
+dependencies = [
+    "fastapi>=0.100.0",
+    "uvicorn[standard]>=0.20.0",
+    "pydantic>=2.0",
+    "pyyaml>=6.0",
+    "httpx>=0.24.0",
+    "slowapi>=0.1.9",
+]
+
+[project.urls]
+Homepage = "https://bespokeagile.com/comply/"
+Documentation = "https://bespokeagile.com/comply/docs/"
+Demo = "https://comply-demo.bespokeagile.com/"
+Repository = "https://github.com/bespokeagile/comply"
+"Bug Tracker" = "https://github.com/bespokeagile/comply/issues"
+
+[project.optional-dependencies]
+semantic = [
+    "anthropic>=0.18.0",
+    "openai>=1.0.0",
+]
+docx = [
+    "python-docx>=0.8.11",
+]
+mcp = [
+    "mcp>=1.26.0",
+]
+test = [
+    "pytest>=7.0",
+]
+all = [
+    "bespoke-comply[semantic,docx,mcp]",
+]
+
+[project.scripts]
+bespoke-comply = "comply.__main__:main"
+bespoke-comply-mcp = "comply.__main__:_run_mcp_entry"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["tests"]
+
+[tool.setuptools]
+packages = ["comply", "comply._vendor", "comply.data", "comply.adapters", "comply.dashboard", "comply.dashboard.views", "comply.ci"]
+package-dir = {"comply" = "."}
+
+[tool.setuptools.package-data]
+"comply" = ["data/*.yaml", "*.yaml", "dashboard/*.html", "dashboard/*.css", "dashboard/*.js", "dashboard/views/*.js", "dashboard/catalog/*.json", "ci/*.yml", "ci/*.md"]

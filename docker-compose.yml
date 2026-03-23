@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  comply:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    volumes:
+      - comply-data:/root/.comply
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+    restart: unless-stopped
+
+  # Optional: co-located gateway for three-layer evidence
+  # Start with: docker compose --profile with-gateway up
+  gateway:
+    build:
+      context: ../gateway
+      dockerfile: Dockerfile
+    profiles:
+      - with-gateway
+    ports:
+      - "9090:9090"
+    volumes:
+      - gateway-data:/root/.gateway
+    restart: unless-stopped
+
+volumes:
+  comply-data:
+  gateway-data:

@@ -1,0 +1,124 @@
+{
+  "framework": "soc2_ai",
+  "version": "1.0.0",
+  "scans": [
+    {
+      "id": "catalog-bespoketracker-soc2_ai-structure",
+      "url": "https://github.com/atdash/BespokeTracker",
+      "repoSlug": "bespoketracker",
+      "repoName": "BespokeTracker",
+      "framework": "soc2_ai",
+      "score": 100.0,
+      "depth": "structure",
+      "timestamp": "2026-03-06T13:41:58.924417+00:00",
+      "source": "demo",
+      "report": {
+        "reportType": "comply_scan",
+        "scanId": "236deff34f4c",
+        "generatedAt": "2026-03-06T13:41:58.924417+00:00",
+        "target": "https://github.com/atdash/BespokeTracker",
+        "repoPath": "/var/folders/_k/jk8_8f9x2jncryy9yg7z3mgw0000gn/T/comply-xbj9sfld/repo",
+        "framework": "soc2_ai",
+        "scanDepth": "structure",
+        "commitSha": "c9bf5f7f300ef0ecc8ea0a2c596b610e35f835cb",
+        "summary": {
+          "met": 6,
+          "partial": 0,
+          "gap": 0,
+          "total": 6,
+          "score": 100.0
+        },
+        "articles": [
+          {
+            "articleId": "services",
+            "label": "Trust Services Criteria for AI Systems",
+            "met": 6,
+            "partial": 0,
+            "gap": 0,
+            "controls": [
+              {
+                "controlId": "CC6-AI",
+                "status": "met",
+                "requirement": "Logical and physical access controls restrict access to AI systems and their data to authorised individuals based on their roles and responsibilities.",
+                "recommendation": "",
+                "evidence": [
+                  "15 access control files",
+                  "Auth libraries: fastapi.security",
+                  "Auth functions: verify_observer_invariance, _verify_stop_mechanism, authenticate, authenticate, authenticate"
+                ],
+                "gaps": [],
+                "evidence_fn": "evidence_logical_access"
+              },
+              {
+                "controlId": "CC7-AI",
+                "status": "met",
+                "requirement": "The entity monitors AI system components and operations to detect anomalies, security events, and deviations from expected behaviour.",
+                "recommendation": "",
+                "evidence": [
+                  "31 monitoring/observability files",
+                  "Functions: check_multi_remediation_conflict, health, health, check_reoptimization_trigger, check_evm_alerts"
+                ],
+                "gaps": [],
+                "evidence_fn": "evidence_continuous_monitoring"
+              },
+              {
+                "controlId": "CC8-AI",
+                "status": "met",
+                "requirement": "Changes to AI system infrastructure, data, software, and procedures are authorised, designed, developed, configured, documented, tested, and approved prior to implementation.",
+                "recommendation": "",
+                "evidence": [
+                  "17 change management file(s)",
+                  "4 versioning file(s)"
+                ],
+                "gaps": [],
+                "evidence_fn": "evidence_change_management"
+              },
+              {
+                "controlId": "A1-AI",
+                "status": "met",
+                "requirement": "The entity maintains, monitors, and evaluates current processing capacity and availability of AI system components to meet business objectives.",
+                "recommendation": "",
+                "evidence": [
+                  "31 monitoring/observability files",
+                  "Functions: check_multi_remediation_conflict, health, health, check_reoptimization_trigger, check_evm_alerts"
+                ],
+                "gaps": [],
+                "evidence_fn": "evidence_availability_controls"
+              },
+              {
+                "controlId": "PI1-AI",
+                "status": "met",
+                "requirement": "The entity implements policies and procedures over AI system processing to ensure completeness, validity, accuracy, timeliness, and authorisation of system processing.",
+                "recommendation": "",
+                "evidence": [
+                  "17 test files with 111 test cases",
+                  "Test frameworks: pytest"
+                ],
+                "gaps": [],
+                "evidence_fn": "evidence_performance_measurement"
+              },
+              {
+                "controlId": "C1-AI",
+                "status": "met",
+                "requirement": "Confidential information processed by AI systems, including training data and inference inputs, is protected during collection, processing, and disposal in conformity with the entity's objectives.",
+                "recommendation": "",
+                "evidence": [
+                  "1 data handling/privacy file(s)",
+                  "Crypto/privacy libraries: hashlib, hmac",
+                  "Data handling functions: compute_journey_hash, get_qa_test_case_by_hash"
+                ],
+                "gaps": [],
+                "evidence_fn": "evidence_data_handling"
+              }
+            ]
+          }
+        ],
+        "model": {
+          "filesScanned": 500,
+          "featuresDiscovered": 316,
+          "completenessScore": 0
+        }
+      }
+    }
+  ]
+}

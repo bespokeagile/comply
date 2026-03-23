@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="AI Platform Test Suite" tests="34" failures="4" errors="1" skipped="2" time="12.847">
+  <testsuite name="test_access_control" tests="6" failures="1" errors="0" skipped="0" time="2.134" timestamp="2026-03-09T09:15:00">
+    <testcase classname="tests.auth.test_rbac" name="test_admin_role_access_control" time="0.234"/>
+    <testcase classname="tests.auth.test_rbac" name="test_viewer_permission_denied" time="0.189"/>
+    <testcase classname="tests.auth.test_rbac" name="test_rbac_role_escalation_blocked" time="0.312"/>
+    <testcase classname="tests.auth.test_api_keys" name="test_api_key_credential_rotation" time="0.445"/>
+    <testcase classname="tests.auth.test_api_keys" name="test_expired_token_access_denied" time="0.156"/>
+    <testcase classname="tests.auth.test_api_keys" name="test_login_rate_limiting" time="0.798">
+      <failure message="AssertionError: Rate limiter allowed 12 requests, expected max 10" type="AssertionError">
+tests/auth/test_api_keys.py:78: AssertionError
+Expected rate limiter to block after 10 requests per minute.
+Actual: 12 requests were allowed before blocking.
+      </failure>
+    </testcase>
+  </testsuite>
+
+  <testsuite name="test_audit_logging" tests="5" failures="0" errors="0" skipped="0" time="1.567" timestamp="2026-03-09T09:15:02">
+    <testcase classname="tests.compliance.test_audit" name="test_audit_log_model_invocation" time="0.234"/>
+    <testcase classname="tests.compliance.test_audit" name="test_audit_log_data_access_event" time="0.198"/>
+    <testcase classname="tests.compliance.test_audit" name="test_audit_trace_completeness" time="0.445"/>
+    <testcase classname="tests.compliance.test_audit" name="test_audit_log_tamper_detection" time="0.356"/>
+    <testcase classname="tests.compliance.test_audit" name="test_audit_record_retention" time="0.334"/>
+  </testsuite>
+
+  <testsuite name="test_data_handling" tests="7" failures="1" errors="1" skipped="1" time="3.456" timestamp="2026-03-09T09:15:04">
+    <testcase classname="tests.data.test_privacy" name="test_pii_data_anonymization" time="0.567"/>
+    <testcase classname="tests.data.test_privacy" name="test_gdpr_consent_enforcement" time="0.334"/>
+    <testcase classname="tests.data.test_privacy" name="test_data_encryption_at_rest" time="0.289"/>
+    <testcase classname="tests.data.test_privacy" name="test_pii_detection_in_prompts" time="0.445">
+      <failure message="AssertionError: PII detector missed SSN pattern in prompt" type="AssertionError">
+tests/data/test_privacy.py:134: AssertionError
+Input: "My SSN is 123-45-6789 and I need help"
+Expected: PII detected and redacted
+Actual: Prompt passed through unredacted
+      </failure>
+    </testcase>
+    <testcase classname="tests.data.test_retention" name="test_data_deletion_compliance" time="0.678">
+      <error message="ConnectionError: Database connection timed out during deletion test" type="ConnectionError">
+tests/data/test_retention.py:56: ConnectionError
+Failed to connect to test database within 5s timeout.
+This may indicate a test infrastructure issue.
+      </error>
+    </testcase>
+    <testcase classname="tests.data.test_retention" name="test_data_export_format" time="0.698"/>
+    <testcase classname="tests.data.test_retention" name="test_cross_border_data_transfer">
+      <skipped message="Requires multi-region test infrastructure"/>
+    </testcase>
+  </testsuite>
+
+  <testsuite name="test_prompt_safety" tests="6" failures="1" errors="0" skipped="0" time="2.890" timestamp="2026-03-09T09:15:08">
+    <testcase classname="tests.safety.test_guardrails" name="test_prompt_injection_detection" time="0.456"/>
+    <testcase classname="tests.safety.test_guardrails" name="test_jailbreak_pattern_blocked" time="0.534"/>
+    <testcase classname="tests.safety.test_guardrails" name="test_safety_filter_harmful_content" time="0.398"/>
+    <testcase classname="tests.safety.test_guardrails" name="test_prompt_guard_unicode_bypass" time="0.567">
+      <failure message="AssertionError: Unicode homoglyph bypass not detected" type="AssertionError">
+tests/safety/test_guardrails.py:89: AssertionError
+Input used Cyrillic 'а' instead of Latin 'a' to bypass filter.
+Expected: injection detected
+Actual: prompt passed through guardrails
+      </failure>
+    </testcase>
+    <testcase classname="tests.safety.test_guardrails" name="test_safety_response_filtering" time="0.489"/>
+    <testcase classname="tests.safety.test_guardrails" name="test_guard_multimodal_input" time="0.446"/>
+  </testsuite>
+
+  <testsuite name="test_monitoring" tests="4" failures="0" errors="0" skipped="1" time="1.234" timestamp="2026-03-09T09:15:11">
+    <testcase classname="tests.ops.test_monitoring" name="test_model_drift_detection_metric" time="0.345"/>
+    <testcase classname="tests.ops.test_monitoring" name="test_anomaly_alert_threshold" time="0.234"/>
+    <testcase classname="tests.ops.test_monitoring" name="test_health_check_endpoint" time="0.189"/>
+    <testcase classname="tests.ops.test_monitoring" name="test_monitoring_dashboard_latency">
+      <skipped message="Flaky in CI — depends on external metrics service"/>
+    </testcase>
+  </testsuite>
+
+  <testsuite name="test_human_oversight" tests="3" failures="1" errors="0" skipped="0" time="0.987" timestamp="2026-03-09T09:15:12">
+    <testcase classname="tests.oversight.test_review" name="test_human_approval_gate" time="0.234"/>
+    <testcase classname="tests.oversight.test_review" name="test_escalation_on_low_confidence" time="0.345"/>
+    <testcase classname="tests.oversight.test_review" name="test_oversight_bypass_prevention" time="0.408">
+      <failure message="AssertionError: System allowed action without required human review" type="AssertionError">
+tests/oversight/test_review.py:67: AssertionError
+High-risk action (patient_discharge_recommendation) executed without
+human-in-the-loop approval. Confidence score was 0.62 (threshold: 0.85).
+      </failure>
+    </testcase>
+  </testsuite>
+
+  <testsuite name="test_output_validation" tests="3" failures="0" errors="0" skipped="0" time="0.579" timestamp="2026-03-09T09:15:13">
+    <testcase classname="tests.validation.test_output" name="test_response_schema_validation" time="0.189"/>
+    <testcase classname="tests.validation.test_output" name="test_output_format_consistency" time="0.201"/>
+    <testcase classname="tests.validation.test_output" name="test_output_content_filtering" time="0.189"/>
+  </testsuite>
+</testsuites>

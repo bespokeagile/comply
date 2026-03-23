@@ -1,0 +1,319 @@
+name: 'BespokeTracker Comply'
+description: 'Run AI compliance gap analysis on your codebase. Supports EU AI Act, NIST AI RMF, ISO 42001, OWASP LLM/Agentic Top 10, and 5 more frameworks.'
+author: 'BespokeTracker'
+
+branding:
+  icon: 'shield'
+  color: 'blue'
+
+inputs:
+  framework:
+    description: 'Compliance framework(s), comma-separated'
+    required: false
+    default: 'eu-ai-act'
+  depth:
+    description: 'Scan depth: structure, content, or semantic'
+    required: false
+    default: 'content'
+  fail-below:
+    description: 'Fail if compliance score is below this threshold (0-100). Leave empty to always pass.'
+    required: false
+    default: ''
+  fail-on-regression:
+    description: 'Fail if new compliance gaps are detected vs baseline'
+    required: false
+    default: 'false'
+  llm-key:
+    description: 'LLM API key (required for semantic depth)'
+    required: false
+    default: ''
+  llm-provider:
+    description: 'LLM provider: anthropic, openai, gemini, grok'
+    required: false
+    default: 'anthropic'
+  sarif-path:
+    description: 'Path to SARIF file from another tool (Semgrep, Bandit, etc.) to merge with scan results'
+    required: false
+    default: ''
+  upload-sarif:
+    description: 'Upload SARIF to GitHub Code Scanning'
+    required: false
+    default: 'true'
+  post-comment:
+    description: 'Post Markdown summary as PR comment'
+    required: false
+    default: 'true'
+  working-directory:
+    description: 'Path to the repository to scan'
+    required: false
+    default: '.'
+  api-url:
+    description: 'Comply API URL for hosted mode (omit to run locally)'
+    required: false
+    default: ''
+
+outputs:
+  score:
+    description: 'Compliance score (0-100)'
+    value: ${{ steps.scan.outputs.score }}
+  report-path:
+    description: 'Path to the JSON report'
+    value: ${{ steps.scan.outputs.report-path }}
+  sarif-path:
+    description: 'Path to the SARIF report'
+    value: ${{ steps.scan.outputs.sarif-path }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Install Comply
+      if: inputs.api-url == ''
+      shell: bash
+      run: |
+        pip install bespoketracker-comply
+
+    - name: Run compliance scan (local)
+      if: inputs.api-url == ''
+      id: scan
+      shell: bash
+      env:
+        COMPLY_LLM_KEY: ${{ inputs.llm-key }}
+      run: |
+        mkdir -p comply-reports
+
+        ARGS="${{ inputs.working-directory }}"
+        ARGS="$ARGS --framework ${{ inputs.framework }}"
+        ARGS="$ARGS --depth ${{ inputs.depth }}"
+        ARGS="$ARGS --output ./comply-reports"
+        ARGS="$ARGS --format json"
+        ARGS="$ARGS --export-formats sarif,markdown"
+
+        if [ -n "$COMPLY_LLM_KEY" ]; then
+          ARGS="$ARGS --llm-key $COMPLY_LLM_KEY --llm-provider ${{ inputs.llm-provider }}"
+        fi
+
+        if [ -n "${{ inputs.fail-below }}" ]; then
+          ARGS="$ARGS --fail-below ${{ inputs.fail-below }}"
+        fi
+
+        if [ "${{ inputs.fail-on-regression }}" = "true" ]; then
+          ARGS="$ARGS --fail-on-regression"
+        fi
+
+        set +e
+        python -m comply scan $ARGS 2>&1
+        SCAN_EXIT=$?
+        set -e
+
+        # Extract score from the JSON report
+        FW=$(echo "${{ inputs.framework }}" | cut -d',' -f1 | tr '-' '_')
+        REPORT_FILE="comply-reports/compliance_report_${FW}.json"
+        if [ ! -f "$REPORT_FILE" ]; then
+          REPORT_FILE=$(ls comply-reports/compliance_report_*.json 2>/dev/null | head -1)
+        fi
+        SCORE=$(python -c "import json; r=json.load(open('${REPORT_FILE}')); print(r.get('summary',{}).get('score',0))" 2>/dev/null || echo "0")
+        echo "score=$SCORE" >> $GITHUB_OUTPUT
+        echo "report-path=${REPORT_FILE}" >> $GITHUB_OUTPUT
+
+        # SARIF path for output
+        SARIF_FILE=$(ls comply-reports/*.sarif 2>/dev/null | head -1 || echo "")
+        echo "sarif-path=${SARIF_FILE}" >> $GITHUB_OUTPUT
+
+        # Rename markdown for PR comment step
+        MD_FILE=$(ls comply-reports/comply-*.md 2>/dev/null | head -1 || echo "")
+        if [ -f "$MD_FILE" ]; then
+          cp "$MD_FILE" comply-reports/summary.md
+        fi
+
+        # SARIF merge: import external security findings if provided
+        SARIF_INPUT="${{ inputs.sarif-path }}"
+        if [ -n "$SARIF_INPUT" ] && [ -f "$SARIF_INPUT" ]; then
+          echo "::group::Merging external SARIF findings"
+          python -m comply import "$SARIF_INPUT" \
+            --framework ${{ inputs.framework }} \
+            --repo "${{ inputs.working-directory }}" \
+            --format json \
+            --output ./comply-reports 2>&1 || echo "::warning::SARIF merge failed"
+          echo "::endgroup::"
+        fi
+
+        exit $SCAN_EXIT
+
+    - name: Run compliance scan (hosted API)
+      if: inputs.api-url != ''
+      id: scan-hosted
+      shell: bash
+      run: |
+        mkdir -p comply-reports
+        pip install httpx 2>/dev/null
+
+        python - <<'SCRIPT'
+        import httpx, json, sys, os, time
+
+        api = "${{ inputs.api-url }}".rstrip("/")
+        fw = "${{ inputs.framework }}"
+        depth = "${{ inputs.depth }}"
+        llm_key = "${{ inputs.llm-key }}" or None
+        llm_provider = "${{ inputs.llm-provider }}"
+        fail_below = "${{ inputs.fail-below }}"
+        sarif_path = "${{ inputs.sarif-path }}"
+        workdir = "${{ inputs.working-directory }}"
+
+        # Determine repo URL from git remote
+        repo_url = os.popen(f"cd {workdir} && git remote get-url origin 2>/dev/null").read().strip()
+        if not repo_url:
+            print("::error::Could not determine repo URL from git remote")
+            sys.exit(2)
+
+        # Start scan
+        body = {"url": repo_url, "framework": fw, "depth": depth}
+        if llm_key:
+            body["llm_key"] = llm_key
+            body["llm_provider"] = llm_provider
+
+        try:
+            r = httpx.post(f"{api}/scan", json=body, timeout=30)
+            r.raise_for_status()
+            scan_id = r.json().get("scanId")
+        except Exception as e:
+            print(f"::error::Failed to start scan: {e}")
+            sys.exit(2)
+
+        print(f"Scan started: {scan_id}")
+
+        # Poll for completion
+        for i in range(180):
+            time.sleep(2)
+            try:
+                status = httpx.get(f"{api}/scan/{scan_id}/progress", timeout=10).json()
+                if status.get("status") == "complete":
+                    break
+                if status.get("status") == "error":
+                    print(f"::error::Scan failed: {status.get('error')}")
+                    sys.exit(2)
+                step = status.get("step", "working")
+                print(f"  {step}...")
+            except Exception:
+                pass
+        else:
+            print("::error::Scan timed out after 6 minutes")
+            sys.exit(2)
+
+        # Get report
+        report = httpx.get(f"{api}/scan/{scan_id}/report", timeout=30).json()
+        score = report.get("summary", {}).get("score", 0)
+
+        # Write outputs
+        report_path = "comply-reports/compliance_report.json"
+        with open(report_path, "w") as f:
+            json.dump(report, f, indent=2)
+
+        # Write SARIF if available
+        try:
+            sarif = httpx.get(f"{api}/scan/{scan_id}/download?fmt=sarif", timeout=30).json()
+            sarif_out = "comply-reports/comply.sarif"
+            with open(sarif_out, "w") as f:
+                json.dump(sarif, f, indent=2)
+        except Exception:
+            sarif_out = ""
+
+        # GitHub outputs
+        with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+            f.write(f"score={score}\n")
+            f.write(f"report-path={report_path}\n")
+            f.write(f"sarif-path={sarif_out}\n")
+
+        # Write markdown summary
+        md = f"## Compliance Scan\n\n**Score: {score:.1f}%** | Framework: {fw} | Depth: {depth}\n"
+        with open("comply-reports/summary.md", "w") as f:
+            f.write(md)
+
+        print(f"Score: {score:.1f}%")
+
+        # SARIF merge if provided
+        if sarif_path and os.path.isfile(sarif_path):
+            try:
+                with open(sarif_path) as f:
+                    sarif_data = json.load(f)
+                r = httpx.post(f"{api}/import-sarif", json={
+                    "sarif": sarif_data,
+                    "framework": fw,
+                }, timeout=60)
+                r.raise_for_status()
+                merge_report = r.json()
+                merge_path = "comply-reports/sarif_import_report.json"
+                with open(merge_path, "w") as f:
+                    json.dump(merge_report, f, indent=2)
+                print(f"SARIF merge: {merge_report.get('findings_count', 0)} findings imported")
+            except Exception as e:
+                print(f"::warning::SARIF merge failed: {e}")
+
+        # Threshold check
+        if fail_below:
+            threshold = float(fail_below)
+            if score < threshold:
+                print(f"::error::Score {score:.1f}% is below threshold {threshold}%")
+                sys.exit(1)
+
+        SCRIPT
+
+    - name: Upload SARIF
+      if: inputs.upload-sarif == 'true' && always()
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: comply-reports/
+      continue-on-error: true
+
+    - name: Post PR comment
+      if: inputs.post-comment == 'true' && github.event_name == 'pull_request' && always()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          let body = '';
+          try {
+            body = fs.readFileSync('comply-reports/summary.md', 'utf8');
+          } catch (e) {
+            const score = '${{ steps.scan.outputs.score || steps.scan-hosted.outputs.score }}';
+            body = `## Compliance Scan\n\nScore: ${score}%\n\nSee artifacts for full report.`;
+          }
+
+          // Find and update existing comment
+          const comments = await github.rest.issues.listComments({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number,
+          });
+          const botComment = comments.data.find(c =>
+            c.body.includes('Compliance Scan') && c.user.type === 'Bot'
+          );
+
+          if (botComment) {
+            await github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: botComment.id,
+              body: body,
+            });
+          } else {
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: body,
+            });
+          }
+      continue-on-error: true
+
+    - name: Upload report artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: comply-reports
+        path: comply-reports/
+      continue-on-error: true
