@@ -5,7 +5,7 @@
 **Regulatory deadlines:** Colorado SB 24-205 (June 30, 2026) | EU AI Act (August 2, 2026)
 
 [![PyPI version](https://img.shields.io/pypi/v/bespoketracker-comply)](https://pypi.org/project/bespoketracker-comply/)
-[![License: BSL 1.1](https://img.shields.io/badge/License-BSL%201.1-blue.svg)](LICENSE)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 
 ## Install
@@ -147,9 +147,6 @@ Options:
 | `baseline --set ID` | Set compliance baseline |
 | `cache stats\|clear` | Manage scan cache |
 | `adapters list\|test\|ingest` | Manage audit log adapters |
-| `activate KEY` | Activate Pro/Enterprise license |
-| `deactivate` | Revert to free tier |
-| `license` | Show current license status |
 
 ## API Reference
 
@@ -226,13 +223,9 @@ Comply works in two modes:
 
 Auto-detected at runtime — no configuration needed.
 
-## Self-Hosted: All Features Included
+## Open Source: All Features Included
 
-Comply is source-available under the BSL 1.1 license. All features — every framework, every scan depth, every export format — are included with no feature gates.
-
-**Update Subscription** ($29-99/mo): Subscribers get continuous improvements to evidence evaluation, new framework support, and priority fixes via a private update channel. Public releases happen on major versions.
-
-Configuration stored in `~/.comply/config.yaml`.
+Comply is open source under the Apache 2.0 license. All features -- every framework, every scan depth, every export format -- are included with no feature gates.
 
 ## Contributing
 
@@ -253,6 +246,6 @@ Evidence functions detect compliance-relevant patterns in codebases. See existin
 
 ## License
 
-Business Source License 1.1. You may use Comply for any purpose including production, except offering a competing hosted compliance scanning service. Converts to Apache 2.0 on 2030-03-10. See [LICENSE](LICENSE) for details.
+Apache License 2.0. See [LICENSE](LICENSE) for details.
 
 Framework definitions (`data/frameworks.yaml`) are licensed under CC-BY-4.0.
