@@ -1777,28 +1777,31 @@ def _load_frameworks_minimal() -> list:
 
 def _run_config(args):
     """View or set configuration values."""
-    from comply.tiers import _load_config, _save_config, _CONFIG_FILE
+    from comply.config import load_config, save_config, config_path
 
     if args.config_action == "path":
-        print(_CONFIG_FILE)
+        print(config_path())
         return
 
     if args.config_action == "set":
-        cfg = _load_config()
+        cfg = load_config()
         # Mask the LLM key in output
         display_val = args.value
         if "key" in args.key.lower() and len(args.value) > 8:
             display_val = args.value[:4] + "..." + args.value[-4:]
         cfg[args.key] = args.value
-        _save_config(cfg)
+        save_config(cfg)
         print(f"  {args.key} = {display_val}")
-        print(f"\n  Saved to {_CONFIG_FILE}")
+        print(f"\n  Saved to {config_path()}")
         return
 
     # Default: show
-    cfg = _load_config()
-    print(f"\n  Config: {_CONFIG_FILE}\n")
-    if not cfg or cfg == {"tier": "free"}:
+    cfg = load_config()
+    print(f"\n  Config: {config_path()}\n")
+    # `not cfg` is the whole test now: load_config() returns {} when absent.
+    # The old `or cfg == {"tier": "free"}` arm was a fossil of a default that
+    # injected a tier key into every config that had never seen one.
+    if not cfg:
         print("  (default configuration — no custom settings)")
         print(f"\n  Set values with: comply config set <key> <value>")
         print("  Common keys: llm_api_key, llm_provider, default_framework")

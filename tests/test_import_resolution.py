@@ -41,16 +41,15 @@ SKIP_DIRS = {
 # Every entry is a real break behind a real route or CLI path; see
 # design_comply_carveout_completion_s577.md for the repair sequence.
 BASELINE = {
-    ("__main__.py", "comply.tiers", "_CONFIG_FILE"),
-    ("__main__.py", "comply.tiers", "_load_config"),
-    ("__main__.py", "comply.tiers", "_save_config"),
+    # R3 (s577) repaid the config half: __main__.py and the two pure-config
+    # routes now read comply.config. Those entries were REMOVED here rather
+    # than left standing, which is what test_baseline_only_shrinks forces.
     ("app.py", "comply.mcp_server", "_handle_alice_message"),
     ("routes_scan.py", "comply.tiers", "_is_managed"),
     ("routes_scan.py", "comply.tiers", "_load_config"),
-    ("routes_scan.py", "comply.tiers", "_save_config"),
     ("scanner.py", "comply.tiers", "TIERS"),
 }
-BASELINE_OCCURRENCES = 12
+BASELINE_OCCURRENCES = 6
 
 
 def _module_files(root=PKG_ROOT):

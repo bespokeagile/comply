@@ -42,12 +42,25 @@ def create_comply_app() -> FastAPI:
         lifespan=_lifespan,
     )
 
-    # CORS -- configurable via env, permissive fallback for local dev
+    # CORS. The default is LOCALHOST ONLY, not "*".
+    #
+    # This is a local-install product: the dashboard is served from the same
+    # origin as the API, so a wildcard buys nothing and costs a real leak.
+    # GET /config returns llm_api_key_hint -- the first and last four characters
+    # of the user's provider key -- with no authentication. Under the previous
+    # `["*"]` default combined with allow_credentials=True, any page the user
+    # visited while the server was running could read it.
+    #
+    # Deployments that genuinely need cross-origin access set
+    # COMPLY_CORS_ORIGINS explicitly, which is what the hosted instance did.
     cors_origins_str = os.environ.get("COMPLY_CORS_ORIGINS", "")
     if cors_origins_str:
         cors_origins = [o.strip() for o in cors_origins_str.split(",") if o.strip()]
     else:
-        cors_origins = ["*"]
+        cors_origins = [
+            "http://localhost:8001", "http://127.0.0.1:8001",
+            "http://localhost:8000", "http://127.0.0.1:8000",
+        ]
 
     app.add_middleware(
         CORSMiddleware,

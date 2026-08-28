@@ -324,8 +324,8 @@ def get_tier_info():
 @router.get("/config")
 def get_config_info():
     """Return current LLM configuration status (no secrets)."""
-    from comply.tiers import _load_config
-    cfg = _load_config()
+    from comply.config import load_config
+    cfg = load_config()
     provider = cfg.get("llm_provider", "")
     model = cfg.get("llm_model", "")
     key = cfg.get("llm_api_key", "")
@@ -346,8 +346,8 @@ class ConfigUpdate(BaseModel):
 @router.put("/config")
 def update_config(req: ConfigUpdate):
     """Update LLM configuration (writes to ~/.comply/config.yaml)."""
-    from comply.tiers import _load_config, _save_config
-    cfg = _load_config()
+    from comply.config import load_config, save_config
+    cfg = load_config()
     changed = []
     if req.llm_provider is not None:
         cfg["llm_provider"] = req.llm_provider
@@ -359,7 +359,7 @@ def update_config(req: ConfigUpdate):
         cfg["llm_api_key"] = req.llm_api_key
         changed.append("llm_api_key")
     if changed:
-        _save_config(cfg)
+        save_config(cfg)
     return {"updated": changed}
 
 

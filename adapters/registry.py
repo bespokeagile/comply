@@ -46,22 +46,16 @@ def configure_adapter(name: str, config: dict) -> AuditLogAdapter:
 
 
 def auto_configure_from_config() -> None:
-    """Load adapter configs from ~/.comply/config.yaml and configure them."""
-    import os
-    import yaml
+    """Load adapter configs from the local config file and configure them.
 
-    config_path = os.path.expanduser("~/.comply/config.yaml")
-    if not os.path.isfile(config_path):
-        return
+    Reads through comply.config rather than opening the path directly. This was
+    a second, independent reader of the same file that hardcoded
+    ~/.comply/config.yaml and so ignored COMPLY_DATA_DIR, meaning adapters were
+    configured from the real home directory even under test isolation.
+    """
+    from comply.config import load_config
 
-    try:
-        with open(config_path) as f:
-            cfg = yaml.safe_load(f) or {}
-    except Exception as exc:
-        log.warning("Failed to load adapter config: %s", exc)
-        return
-
-    adapters_cfg = cfg.get("adapters", {})
+    adapters_cfg = load_config().get("adapters", {})
     for name, adapter_cfg in adapters_cfg.items():
         if name in _REGISTRY:
             try:

@@ -144,6 +144,17 @@ def run_comply_scan_multi(
         _progress("resolved", repo_path)
 
         # ── 3. Configure LLM ─────────────────────────────────────────
+        # Fall back to the stored config when no key was passed in. Until this
+        # existed, `config set llm_api_key` had WRITERS and no READER: the CLI
+        # accepted the key, the server accepted it, the startup banner told you
+        # to set it, and nothing ever read it back out. Resolved here, at the
+        # single entry point, rather than at each of the four call sites.
+        if not llm_api_key or not llm_provider:
+            from comply.config import load_config
+            stored = load_config()
+            llm_api_key = llm_api_key or stored.get("llm_api_key") or ""
+            llm_provider = llm_provider or stored.get("llm_provider") or ""
+
         if llm_api_key:
             provider_name = llm_provider or "anthropic"
             _configure_llm(provider_name, llm_api_key, original_env)
@@ -220,9 +231,6 @@ def run_comply_scan_multi(
         raise
     finally:
         _restore_env(original_env)
-        with contextlib.suppress(ImportError, AttributeError):
-            from project_config import close_project
-            close_project()
         if tmp_root and not output_dir:
             with contextlib.suppress(OSError):
                 shutil.rmtree(tmp_root, ignore_errors=True)
@@ -250,25 +258,25 @@ def _scan_and_build_model(
             log.warning("Cache lookup failed: %s", exc)
 
     # Standalone scanner (vendored pure-Python)
-        on_progress("scanning", f"depth={scan_depth} (standalone)")
-        from comply._vendor.codebase_scanner import scan_codebase as standalone_scan
-        codebase_model = standalone_scan(
-            repo_path=repo_path,
-            scan_depth=scan_depth,
-            max_files=max_files,
-        )
-        # Store the codebase_model for the evaluator
-        model_result = {
-            "scan": {
-                "files_scanned": codebase_model.get("file_count", 0),
-                "features_created": codebase_model.get("feature_count", 0),
-                "features_updated": 0,
-                "edges_created": len(codebase_model.get("relationships", [])),
-            },
-            "reconciliation": {"matched": [], "code_only": [], "plan_only": [], "coverage": 0},
-            "validation": {"score": 0, "findings": {}},
-            "_codebase_model": codebase_model,
-        }
+    on_progress("scanning", f"depth={scan_depth} (standalone)")
+    from comply._vendor.codebase_scanner import scan_codebase as standalone_scan
+    codebase_model = standalone_scan(
+        repo_path=repo_path,
+        scan_depth=scan_depth,
+        max_files=max_files,
+    )
+    # Store the codebase_model for the evaluator
+    model_result = {
+        "scan": {
+            "files_scanned": codebase_model.get("file_count", 0),
+            "features_created": codebase_model.get("feature_count", 0),
+            "features_updated": 0,
+            "edges_created": len(codebase_model.get("relationships", [])),
+        },
+        "reconciliation": {"matched": [], "code_only": [], "plan_only": [], "coverage": 0},
+        "validation": {"score": 0, "findings": {}},
+        "_codebase_model": codebase_model,
+    }
 
     # Save to cache
     if use_cache and commit_sha:
@@ -449,23 +457,11 @@ def _evaluate_and_report(
 
 def _restore_env(original_env: dict):
     """Restore environment variables and config after a scan."""
-    saved_provider = original_env.pop("_llm_provider", None)
-    saved_chat_model = original_env.pop("_chat_model", None)
     for key, val in original_env.items():
         if val is None:
             os.environ.pop(key, None)
         else:
             os.environ[key] = val
-    if saved_provider is not None:
-        try:
-            import config
-            config._CFG["llm_provider"] = saved_provider
-            if saved_chat_model is not None:
-                config._CFG.setdefault("chat", {})["model"] = saved_chat_model
-            from llm_provider import reset_provider
-            reset_provider()
-        except (ImportError, KeyError, AttributeError) as exc:
-            log.debug("LLM provider restore skipped: %s", exc)
 
 
 _DEFAULT_MODELS = {
@@ -488,25 +484,6 @@ def _configure_llm(provider_name: str, api_key: str, original_env: dict):
     original_env[env_var] = os.environ.get(env_var)
     os.environ[env_var] = api_key
 
-    try:
-        import config
-        original_env["_llm_provider"] = config._CFG.get("llm_provider", "anthropic")
-        config._CFG["llm_provider"] = provider_name
-
-        chat_cfg = config._CFG.get("chat", {})
-        original_env["_chat_model"] = chat_cfg.get("model", "")
-        if provider_name in _DEFAULT_MODELS:
-            if "chat" not in config._CFG:
-                config._CFG["chat"] = {}
-            config._CFG["chat"]["model"] = _DEFAULT_MODELS[provider_name]
-    except (ImportError, KeyError, AttributeError) as exc:
-        log.debug("LLM config setup skipped: %s", exc)
-
-    try:
-        from llm_provider import reset_provider
-        reset_provider()
-    except (ImportError, RuntimeError) as exc:
-        log.debug("LLM provider reset skipped: %s", exc)
 
 
 def _get_commit_sha(repo_path: str) -> str:
