@@ -90,6 +90,12 @@ def create_comply_app() -> FastAPI:
     from comply.routes import router
     app.include_router(router)
 
+    # Liveness. Mounted first and separately: the Dockerfile HEALTHCHECK and the
+    # dashboard version badge depend on it, and it was lost once already by
+    # living inside a feature module that got deleted wholesale.
+    from comply.routes_health import router as health_router
+    app.include_router(health_router)
+
     from comply.monitor_routes import monitor_router
     app.include_router(monitor_router)
 
