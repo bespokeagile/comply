@@ -5,10 +5,10 @@ import logging
 import os
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
-from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 log = logging.getLogger(__name__)
@@ -130,17 +130,16 @@ def create_comply_app() -> FastAPI:
         if os.path.isfile(dashboard_index):
             with open(dashboard_index) as f:
                 return f.read()
-        return RedirectResponse("/legacy")
-
-    # Keep old UI accessible at /legacy
-    legacy_path = os.path.join(os.path.dirname(__file__), "ui.html")
-
-    @app.get("/legacy", response_class=HTMLResponse)
-    async def serve_legacy():
-        if os.path.isfile(legacy_path):
-            with open(legacy_path) as f:
-                return f.read()
-        return "<h1>BespokeAgile Comply</h1><p>Legacy UI not found.</p>"
+        # The dashboard is packaged with the wheel, so its absence is a broken
+        # install, not a condition to degrade around. This used to redirect to
+        # /legacy, which quietly served an 798-line UI that locked every
+        # framework behind an upgrade prompt.
+        raise HTTPException(
+            500,
+            "Dashboard assets are missing from this installation. Expected "
+            f"{dashboard_index}. Reinstall the package, or run from a source "
+            "checkout with the dashboard/ directory present.",
+        )
 
     # Alice conversation endpoint (requires LLM API key)
     @app.post("/alice")
