@@ -4,28 +4,26 @@ const SettingsView = {
         const app = document.getElementById('app');
         app.innerHTML = '<div class="loading"><span class="spinner"></span> Loading settings...</div>';
 
-        let config = {}, tier = {}, license = {}, adapters = [];
-        try {
-            const results = await Promise.allSettled([
-                complyApi.getConfig(),
-                complyApi.getTier(),
-                complyApi.getLicense(),
-                complyApi.getAdapters(),
-            ]);
-            config = results[0].status === 'fulfilled' ? results[0].value : {};
-            tier = results[1].status === 'fulfilled' ? results[1].value : {};
-            license = results[2].status === 'fulfilled' ? results[2].value : {};
-            adapters = results[3].status === 'fulfilled' ? results[3].value : [];
-        } catch (e) { /* defaults */ }
-
-        const isManaged = tier.managed === true;
+        let config = {}, adapters = [];
+        const results = await Promise.allSettled([
+            complyApi.getConfig(),
+            complyApi.getAdapters(),
+        ]);
+        config = results[0].status === 'fulfilled' ? results[0].value : {};
+        adapters = results[1].status === 'fulfilled' ? results[1].value : [];
+        // A rejected settle is a real failure, not an empty state. Surface it
+        // rather than rendering a blank panel that reads as "nothing here".
+        const failed = results.filter(r => r.status === 'rejected');
 
         app.innerHTML = `
         <div class="settings-page">
             <div class="page-header"><h2>Settings</h2></div>
+            ${failed.length ? `<div class="card"><div class="card-header">Could not load settings</div>
+                <p style="padding:12px">${failed.length} of ${results.length} requests failed.
+                Check that the Comply server is running.</p></div>` : ''}
             ${this._renderLLMConfig(config)}
-            ${!isManaged ? this._renderAdapterStatus(adapters) : ''}
-            ${this._renderInstallation(isManaged, license, tier)}
+            ${this._renderAdapterStatus(adapters)}
+            ${this._renderInstallation()}
         </div>`;
     },
 
@@ -176,11 +174,7 @@ const SettingsView = {
     },
 
     /* ── Installation & Subscription ── */
-    _renderInstallation(isManaged, license, tier) {
-        if (isManaged) {
-            return this._renderManagedPlan(license, tier);
-        }
-
+    _renderInstallation() {
         return `
         <div class="card">
             <div class="card-header">Installation</div>
@@ -195,82 +189,9 @@ const SettingsView = {
                 </div>
                 <div class="settings-install-item">
                     <span class="settings-install-label">License</span>
-                    <span class="settings-install-value">BSL 1.1</span>
+                    <span class="settings-install-value">Apache-2.0</span>
                 </div>
-                <div class="settings-install-item">
-                    <span class="settings-install-label">Updates</span>
-                    <span class="settings-install-value" id="settings-sub-status">Not subscribed</span>
-                </div>
-            </div>
-            <div class="settings-sub-cta">
-                <p>Subscribe for early-access frameworks, evidence function improvements, and priority support.</p>
-                <a href="https://bespokeagile.com/comply/pricing/" target="_blank" rel="noopener"
-                   class="btn btn-secondary">View Pricing</a>
             </div>
         </div>`;
-    },
-
-    _renderManagedPlan(license, tier) {
-        const currentTier = license.tier || 'free';
-        const licensed = license.licensed || false;
-
-        return `
-        <div class="card">
-            <div class="card-header">Plan</div>
-            <div class="settings-install-grid">
-                <div class="settings-install-item">
-                    <span class="settings-install-label">Tier</span>
-                    <span class="settings-install-value"><span class="plan-badge plan-${currentTier}">${currentTier.toUpperCase()}</span></span>
-                </div>
-                <div class="settings-install-item">
-                    <span class="settings-install-label">Frameworks</span>
-                    <span class="settings-install-value">${(tier.frameworks || []).join(', ') || 'All'}</span>
-                </div>
-                <div class="settings-install-item">
-                    <span class="settings-install-label">Max Depth</span>
-                    <span class="settings-install-value">${tier.max_depth || 'content'}</span>
-                </div>
-                <div class="settings-install-item">
-                    <span class="settings-install-label">Exports</span>
-                    <span class="settings-install-value">${(tier.exports || []).join(', ')}</span>
-                </div>
-            </div>
-            ${licensed ? `<p style="font-size:12px;color:var(--text-muted);margin-top:8px">License: ${license.key_prefix || ''}</p>` : ''}
-
-            <div style="margin-top:16px">
-                <div class="card-header" style="font-size:14px">License Key</div>
-                <div class="settings-form-row" style="margin-top:8px">
-                    <input class="input" id="license-key-input"
-                           placeholder="pro-xxxxxxxx-yyyyyyyy" style="font-family:monospace;flex:1" />
-                    <button class="btn btn-primary" onclick="SettingsView.activate()">Activate</button>
-                    ${licensed ? '<button class="btn btn-secondary" onclick="SettingsView.deactivate()">Deactivate</button>' : ''}
-                </div>
-                <div id="license-message" style="margin-top:8px"></div>
-            </div>
-        </div>`;
-    },
-
-    async activate() {
-        const key = document.getElementById('license-key-input').value.trim();
-        if (!key) return;
-        const msgEl = document.getElementById('license-message');
-        try {
-            const result = await complyApi.activateLicense(key);
-            msgEl.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
-            setTimeout(() => this.render(), 1500);
-        } catch (e) {
-            msgEl.innerHTML = `<div class="alert alert-error">${e.message}</div>`;
-        }
-    },
-
-    async deactivate() {
-        if (!confirm('Deactivate license and revert to free tier?')) return;
-        try {
-            await complyApi.deactivateLicense();
-            this.render();
-        } catch (e) {
-            document.getElementById('license-message').innerHTML =
-                `<div class="alert alert-error">${e.message}</div>`;
-        }
-    },
+    }
 };

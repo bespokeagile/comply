@@ -30,9 +30,7 @@ comply/
   scanner.py            Core scan orchestration
   app.py                FastAPI web server
   routes.py             REST endpoints
-  tiers.py              Tier gating (free/pro/enterprise)
-  licensing.py          License key generation & validation
-  billing.py            Stripe integration
+  config.py             Local config (~/.comply/config.yaml)
   report.py             Terminal & file formatters
   formats.py            SARIF, JUnit, Markdown exports
   docx_report.py        DOCX report generator
@@ -161,6 +159,6 @@ Personas produce deterministic data, so the same persona always generates the sa
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under the MIT License.
+By contributing, you agree that your contributions will be licensed under the Apache License 2.0.
 
 Framework definitions in `data/frameworks.yaml` are licensed under CC-BY-4.0.

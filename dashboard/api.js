@@ -142,9 +142,8 @@ const complyApi = {
         return this._fetch('/config', { method: 'PUT', body: JSON.stringify(data) });
     },
 
-    // Frameworks & tier
+    // Frameworks
     async getFrameworks() { return this._fetch('/frameworks'); },
-    async getTier() { return this._fetch('/tier'); },
 
     // Adapters
     async getAdapters() { return this._fetch('/adapters'); },
@@ -203,18 +202,6 @@ const complyApi = {
             method: 'POST',
             body: JSON.stringify({ url, framework, email: email || null }),
         });
-    },
-
-    // License
-    async getLicense() { return this._fetch('/license'); },
-    async activateLicense(key) {
-        return this._fetch('/license/activate', {
-            method: 'POST',
-            body: JSON.stringify({ license_key: key }),
-        });
-    },
-    async deactivateLicense() {
-        return this._fetch('/license/deactivate', { method: 'POST' });
     },
 
     // Monitors

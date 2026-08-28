@@ -27,10 +27,6 @@ class TestHealthCheck:
 
 
 class TestConfig:
-    def test_get_tier(self, new_user_client):
-        r = new_user_client.get("/tier")
-        assert r.status_code == 200
-
     def test_get_config(self, new_user_client):
         r = new_user_client.get("/config")
         assert r.status_code == 200

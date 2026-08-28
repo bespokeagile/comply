@@ -64,25 +64,6 @@ def start_scan(req: ScanRequest):
         fw_list = resolve_frameworks(req.jurisdiction)
         req.framework = ",".join(fw_list)
 
-    from comply.tiers import check_framework_allowed, check_depth_allowed, get_tier, get_tier_config
-
-    if not check_framework_allowed(req.framework):
-        tier = get_tier()
-        cfg = get_tier_config()
-        raise HTTPException(
-            403,
-            f"Framework '{req.framework}' not available on {tier} tier. "
-            f"Allowed: {', '.join(cfg['frameworks'])}."
-        )
-
-    if not check_depth_allowed(req.depth):
-        tier = get_tier()
-        cfg = get_tier_config()
-        raise HTTPException(
-            403,
-            f"Scan depth '{req.depth}' not available on {tier} tier (max: {cfg['max_depth']})."
-        )
-
     output_dir = tempfile.mkdtemp(prefix="comply-web-")
     scan = create_scan(
         url=req.url,
@@ -214,15 +195,6 @@ def get_report(scan_id: str):
 @router.get("/scan/{scan_id}/download")
 def download_report(scan_id: str, fmt: str = "json"):
     """Download report in requested format (json, docx, zip)."""
-    from comply.tiers import check_export_allowed, get_tier
-
-    if not check_export_allowed(fmt):
-        tier = get_tier()
-        raise HTTPException(
-            403,
-            f"Export format '{fmt}' not available on {tier} tier. Upgrade for DOCX and ZIP exports."
-        )
-
     scan = _get_scan_or_stored(scan_id)
     if scan is None:
         raise HTTPException(404, "Scan not found")
@@ -312,15 +284,6 @@ def get_frameworks():
     return list_frameworks()
 
 
-@router.get("/tier")
-def get_tier_info():
-    """Return current tier and its limits."""
-    from comply.tiers import get_tier, get_tier_config, _is_managed
-    tier = get_tier()
-    cfg = get_tier_config()
-    return {"tier": tier, "managed": _is_managed(), **cfg}
-
-
 @router.get("/config")
 def get_config_info():
     """Return current LLM configuration status (no secrets)."""
@@ -366,14 +329,11 @@ def update_config(req: ConfigUpdate):
 @router.get("/capabilities")
 def get_capabilities():
     """Return app capabilities for the frontend — single source of truth for mode detection."""
-    from comply.tiers import _is_managed, _load_config, get_tier
+    from comply.config import load_config
     from comply.demo_security import is_demo_mode
-    cfg = _load_config()
-    key = cfg.get("llm_api_key", "")
+    key = load_config().get("llm_api_key", "")
     return {
         "demo_mode": is_demo_mode(),
-        "managed": _is_managed(),
-        "tier": get_tier(),
         "has_api_key": bool(key),
         "encryption": is_demo_mode(),       # client-side encryption in demo mode
         "funded_scans": is_demo_mode(),      # funded scans only in demo mode

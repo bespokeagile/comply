@@ -113,17 +113,6 @@ body {
     border-top: 1px solid var(--border);
 }
 
-.tier-badge {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--text-muted);
-    background: var(--bg-tertiary);
-    padding: 4px 8px;
-    border-radius: 4px;
-    text-align: center;
-}
-
 /* Main content */
 .content-area {
     margin-left: var(--sidebar-width);

@@ -89,38 +89,6 @@ def run_comply_scan_multi(
     if frameworks is None:
         frameworks = ["eu-ai-act"]
 
-    # ── Tier enforcement ─────────────────────────────────────────
-    from comply.tiers import (
-        check_framework_allowed, check_depth_allowed, get_tier,
-        check_multi_framework_allowed,
-    )
-
-    for fw in frameworks:
-        if not check_framework_allowed(fw):
-            tier = get_tier()
-            from comply.tiers import TIERS
-            allowed = TIERS.get(tier, {}).get("frameworks", [])
-            raise PermissionError(
-                f"Framework '{fw}' is not available on the {tier} tier. "
-                f"Allowed: {', '.join(allowed)}. Upgrade to Pro or Enterprise for more frameworks."
-            )
-
-    if not check_multi_framework_allowed(len(frameworks)):
-        tier = get_tier()
-        raise PermissionError(
-            f"Multi-framework scan ({len(frameworks)} frameworks) is not available on the {tier} tier. "
-            f"Upgrade for multi-framework support."
-        )
-
-    if not check_depth_allowed(scan_depth):
-        tier = get_tier()
-        from comply.tiers import TIERS
-        max_depth = TIERS.get(tier, {}).get("max_depth", "content")
-        raise PermissionError(
-            f"Scan depth '{scan_depth}' is not available on the {tier} tier "
-            f"(max: {max_depth}). Upgrade to Pro or Enterprise for semantic analysis."
-        )
-
     tmp_root = None
     original_env = {}
 

@@ -44,12 +44,12 @@ BASELINE = {
     # R3 (s577) repaid the config half: __main__.py and the two pure-config
     # routes now read comply.config. Those entries were REMOVED here rather
     # than left standing, which is what test_baseline_only_shrinks forces.
+    # R5 (s577) deleted tiers.py and every caller, so all four comply.tiers
+    # entries were repaid and REMOVED. What remains is the dead POST /alice
+    # handler, which R6 takes with the rest of the hosted machinery.
     ("app.py", "comply.mcp_server", "_handle_alice_message"),
-    ("routes_scan.py", "comply.tiers", "_is_managed"),
-    ("routes_scan.py", "comply.tiers", "_load_config"),
-    ("scanner.py", "comply.tiers", "TIERS"),
 }
-BASELINE_OCCURRENCES = 6
+BASELINE_OCCURRENCES = 1
 
 
 def _module_files(root=PKG_ROOT):

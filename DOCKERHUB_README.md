@@ -54,6 +54,6 @@ Scan history and configuration persist in the `/root/.comply` volume.
 ## Also Available
 
 - **PyPI**: `pip install bespoketracker-comply`
-- **GitHub**: [bespokeagile/comply](https://github.com/bespokeagile/comply) (BSL-1.1)
+- **GitHub**: [bespokeagile/comply](https://github.com/bespokeagile/comply) (Apache-2.0)
 - **Docs**: [bespokeagile.com/comply/docs](https://bespokeagile.com/comply/docs/)
 - **Live Demo**: [bespokeagile-comply-demo.fly.dev](https://bespokeagile-comply-demo.fly.dev/)

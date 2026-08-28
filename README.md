@@ -170,8 +170,6 @@ Options:
 | `GET` | `/frameworks` | List frameworks |
 | `POST` | `/audit` | Predicate gap audit (free) |
 | `GET` | `/matrix?frameworks=` | Cross-framework matrix |
-| `GET` | `/license` | License status |
-| `POST` | `/license/activate` | Activate license key |
 | `GET` | `/health` | Health + version |
 
 ## CI/CD Integration
