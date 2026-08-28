@@ -33,3 +33,12 @@ research/
 .pytest_cache/
 htmlcov/
 .coverage
+
+# Local environment files. Added s577 after a hardcoded credential incident:
+# these were NOT ignored in either public repo, while the docs instruct
+# operators to create a .env. Push protection is now on, but an ignore rule is
+# the cheaper guard because it prevents the staging, not just the push.
+# .env.example is deliberately exempt: it is documentation, not a secret.
+.env
+.env.*
+!.env.example

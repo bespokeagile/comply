@@ -64,5 +64,5 @@ jobs:
       - name: Verify wheel contents
         run: |
           pip install dist/*.whl
-          bespoketracker-comply frameworks
-          bespoketracker-comply license
+          bespoke-comply --version
+          bespoke-comply frameworks

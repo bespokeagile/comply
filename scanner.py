@@ -300,17 +300,17 @@ def _evaluate_and_report(
     on_progress("evaluating", framework)
     # Standalone evaluation using vendored evaluator
     from comply._vendor.compliance_eval import evaluate_compliance as standalone_eval, reset_semantic_counter
-        codebase_model = model_result.get("_codebase_model", {})
-        use_semantic = scan_depth == "semantic" and bool(llm_api_key)
-        if use_semantic:
-            reset_semantic_counter()
-        compliance_status = standalone_eval(
-            framework, codebase_model,
-            semantic=use_semantic,
-            llm_provider=llm_provider or "anthropic",
-            llm_api_key=llm_api_key or "",
-            llm_model="",
-        )
+    codebase_model = model_result.get("_codebase_model", {})
+    use_semantic = scan_depth == "semantic" and bool(llm_api_key)
+    if use_semantic:
+        reset_semantic_counter()
+    compliance_status = standalone_eval(
+        framework, codebase_model,
+        semantic=use_semantic,
+        llm_provider=llm_provider or "anthropic",
+        llm_api_key=llm_api_key or "",
+        llm_model="",
+    )
 
     on_progress("generating", f"report ({framework})")
     report = _generate_report(
@@ -441,10 +441,8 @@ def _evaluate_and_report(
     except Exception as exc:
         log.warning("Failed to save scan to history: %s", exc)
 
-    # Platform integration hook (no-op in standalone OSS)
-    pass
-    except Exception as exc:
-        log.debug("Coalesce reflex dispatch skipped: %s", exc)
+    # No platform integration in standalone OSS: the monorepo build fires
+    # Coalesce reflexes here, and that dispatch is deliberately absent.
 
     return report
 
